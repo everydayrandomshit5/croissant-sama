@@ -2,7 +2,7 @@
   "name": "croissant-sama",
   "version": "0.15.1",
   "private": true,
-  "description": "Desktop Anime Chess GUI with Stockfish 17 Engine Analysis, Waifu Dialogue Commentary, and 12 Sovereigns Art Codex",
+  "description": "Desktop Anime Chess GUI with Stockfish Engine Analysis, Waifu Dialogue Commentary, and 12 Sovereigns Art Codex",
   "license": "GPL-3.0",
   "author": "everydayrandomshit5",
   "repository": {

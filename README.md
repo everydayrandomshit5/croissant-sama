@@ -4,7 +4,7 @@
   <img width="128" height="128" src="./src-tauri/icons/icon.png" alt="Croissant_Sama Logo" />
   <h1 align="center">Croissant_Sama</h1>
   <p align="center">
-    <strong>Desktop Anime Chess GUI • Stockfish 17 Engine Analysis • Waifu Dialogue Commentary • 12 Sovereigns Art Codex</strong>
+    <strong>Desktop Anime Chess GUI • Stockfish Engine Analysis • Waifu Dialogue Commentary • 12 Sovereigns Art Codex</strong>
     <br />
     An Anime-themed Fork of <a href="https://github.com/franciscoBSalgueiro/en-croissant">En Croissant</a>
     <br />
@@ -66,7 +66,7 @@ The entire chessboard has been reimagined as two opposing noble houses featuring
 
 ### ⚡ Professional Chess Toolkit (En Croissant Engine)
 
-- **UCI Engine Management**: Multi-PV evaluation powered by Stockfish 17, Maia neural networks, and custom engines.
+- **UCI Engine Management**: Multi-PV evaluation powered by Stockfish, Maia neural networks, and custom engines.
 - **Game Review & Graphs**: Full-game precision graphs, centipawn loss analysis, and blunder detection.
 - **Chess.com & Lichess Sync**: One-click PGN import, tournament database exploration, and user game downloads.
 - **Repertoire Trainer**: Spaced-repetition opening repertoire training with due-card notifications.
