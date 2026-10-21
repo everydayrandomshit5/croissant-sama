@@ -22,6 +22,7 @@ import { match } from "ts-pattern";
 import { useStore } from "zustand";
 import { useShallow } from "zustand/react/shallow";
 import { Chessground, type ChessgroundRef } from "@/chessground/Chessground";
+import { AnimeCutInOverlay } from "@/components/chesssama/AnimeCutInOverlay";
 import {
   autoPromoteAtom,
   bestMovesFamily,
@@ -440,6 +441,7 @@ function Board({
                       orientation={orientation}
                       square={square}
                       annotation={currentNode.annotations[0]}
+                      comment={currentNode.comment}
                     />
                   </Box>
                 </Box>
@@ -490,6 +492,7 @@ function Board({
                 }
               }}
             >
+              <AnimeCutInOverlay />
               <PromotionModal
                 pendingMove={pendingMove}
                 cancelMove={() => setPendingMove(null)}

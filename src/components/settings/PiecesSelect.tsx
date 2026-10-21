@@ -20,6 +20,7 @@ type Item = {
 };
 
 const pieceSets2d: Item[] = [
+  { label: "Croissant Sama (Anime Chibi)", value: "chesssama" },
   { label: "Alpha", value: "alpha" },
   { label: "Anarcandy", value: "anarcandy" },
   { label: "California", value: "california" },

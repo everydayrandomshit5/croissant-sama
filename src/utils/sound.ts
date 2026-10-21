@@ -62,7 +62,10 @@ export function playSound(capture: boolean, check: boolean) {
 
         player.src = url;
         player.volume = volume;
-        player.play().catch((e) => console.error("Audio playback error:", e));
+        const res = player.play();
+        if (res && typeof res.catch === "function") {
+            res.catch((e) => console.error("Audio playback error:", e));
+        }
     };
 
     if (isLinux()) {
@@ -72,7 +75,8 @@ export function playSound(capture: boolean, check: boolean) {
                 playWithUrl(url);
             })
             .catch(() => {
-                // fails if Tauri APIs are unavailable (e.g., in tests)
+                const webUrl = `/sound/${collection}/${type}.mp3`;
+                playWithUrl(webUrl);
             });
     } else {
         const path = `sound/${collection}/${type}.mp3`;
@@ -89,7 +93,92 @@ export function playSound(capture: boolean, check: boolean) {
                 playWithUrl(assetUrl);
             })
             .catch(() => {
-                // fails if Tauri APIs are unavailable (e.g., in tests)
+                // Web/Browser fallback
+                const webUrl = `/sound/${collection}/${type}.mp3`;
+                playWithUrl(webUrl);
             });
+    }
+}
+
+// Custom Anime Sound Synthesis via Web Audio API (zero external deps)
+let audioCtx: AudioContext | null = null;
+function getAudioContext(): AudioContext | null {
+    if (typeof window === "undefined") return null;
+    if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+        if (AudioContextClass) {
+            audioCtx = new AudioContextClass();
+        }
+    }
+    if (audioCtx && audioCtx.state === "suspended") {
+        audioCtx.resume();
+    }
+    return audioCtx;
+}
+
+export function playAnimeSfx(type: "brilliant" | "blunder" | "promotion" | "cutin" | "checkmate") {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const store = getDefaultStore();
+    const volume = store.get(soundVolumeAtom);
+    const now = ctx.currentTime;
+
+    const masterGain = ctx.createGain();
+    masterGain.gain.setValueAtTime(volume * 0.4, now);
+    masterGain.connect(ctx.destination);
+
+    if (type === "cutin" || type === "brilliant") {
+        const freqs = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+        freqs.forEach((f, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(f, now + i * 0.04);
+            gain.gain.setValueAtTime(0.3, now + i * 0.04);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.04 + 0.6);
+            osc.connect(gain);
+            gain.connect(masterGain);
+            osc.start(now + i * 0.04);
+            osc.stop(now + i * 0.04 + 0.6);
+        });
+    } else if (type === "blunder") {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sawtooth";
+        osc.frequency.setValueAtTime(320, now);
+        osc.frequency.exponentialRampToValueAtTime(80, now + 0.4);
+        gain.gain.setValueAtTime(0.4, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+        osc.connect(gain);
+        gain.connect(masterGain);
+        osc.start(now);
+        osc.stop(now + 0.5);
+    } else if (type === "promotion") {
+        const notes = [440, 554.37, 659.25, 880];
+        notes.forEach((f, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = "triangle";
+            osc.frequency.setValueAtTime(f, now + idx * 0.08);
+            gain.gain.setValueAtTime(0.35, now + idx * 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.7);
+            osc.connect(gain);
+            gain.connect(masterGain);
+            osc.start(now + idx * 0.08);
+            osc.stop(now + idx * 0.08 + 0.7);
+        });
+    } else if (type === "checkmate") {
+        [261.63, 329.63, 392.00, 523.25].forEach((f) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(f, now);
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+            osc.connect(gain);
+            gain.connect(masterGain);
+            osc.start(now);
+            osc.stop(now + 1.2);
+        });
     }
 }

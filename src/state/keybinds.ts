@@ -1,8 +1,8 @@
-import { platform } from "@tauri-apps/plugin-os";
+import { safePlatform } from "@/utils/platform";
 import { atomWithStorage } from "jotai/utils";
 import type { SyncStorage, SyncStringStorage } from "jotai/vanilla/utils/atomWithStorage";
 
-const meta = platform() === "macos" ? "cmd" : "ctrl";
+const meta = safePlatform() === "macos" ? "cmd" : "ctrl";
 
 type Keybind = {
     name: string;

@@ -22,6 +22,7 @@ import {
     type TreeState,
     treeIteratorMainLine,
 } from "@/utils/treeReducer";
+import { generateAnimeMoveCommentary } from "@/components/chesssama/animeDialogue";
 
 export interface TreeStoreState extends TreeState {
     currentNode: () => TreeNode;
@@ -77,8 +78,9 @@ export interface TreeStoreState extends TreeState {
             novelty: boolean;
             is_sacrifice: boolean;
         }[],
-        options?: { showVariations: boolean },
+        options?: { showVariations?: boolean; animeCommentary?: boolean; characterId?: string },
     ) => void;
+    generateAnimeCommentary: (options?: { characterId?: string; overwrite?: boolean }) => void;
 
     setReportInProgress: (value: boolean) => void;
 
@@ -492,6 +494,13 @@ export const createTreeStore = (id?: string, initialTree?: TreeState) => {
                     addAnalysis(state, analysis, options);
                 }),
             ),
+        generateAnimeCommentary: (options) =>
+            set(
+                produce((state) => {
+                    state.dirty = true;
+                    generateAnimeCommentaryInTree(state, options);
+                }),
+            ),
 
         setReportInProgress: (value: boolean) => {
             set(
@@ -697,7 +706,7 @@ function addAnalysis(
         novelty: boolean;
         is_sacrifice: boolean;
     }[],
-    options?: { showVariations: boolean },
+    options?: { showVariations?: boolean; animeCommentary?: boolean; characterId?: string },
 ) {
     let cur = state.root;
     let i = 0;
@@ -801,9 +810,58 @@ function addAnalysis(
             cur.annotations.sort((a, b) =>
                 ANNOTATION_INFO[a].nag > ANNOTATION_INFO[b].nag ? 1 : -1,
             );
+
+            // Generate anime ecchi dialogue commentary
+            if (options?.animeCommentary) {
+                const bestSan =
+                    i > 0 &&
+                    analysis[i - 1].best.length > 0 &&
+                    analysis[i - 1].best[0].sanMoves &&
+                    analysis[i - 1].best[0].sanMoves.length > 0
+                        ? analysis[i - 1].best[0].sanMoves[0]
+                        : undefined;
+
+                const commentary = generateAnimeMoveCommentary({
+                    san: cur.san || "",
+                    annotation: cur.annotations[0],
+                    color,
+                    bestSan,
+                    isSacrifice: analysis[i].is_sacrifice,
+                    novelty: analysis[i].novelty,
+                    preferredCharacterId: options?.characterId,
+                });
+
+                if (commentary) {
+                    cur.comment = cur.comment
+                        ? `${cur.comment} ${commentary.formattedMarkdown}`
+                        : commentary.formattedMarkdown;
+                }
+            }
         }
         parent = cur;
         cur = cur.children[0];
         i++;
     }
 }
+
+function generateAnimeCommentaryInTree(
+    state: TreeState,
+    options?: { characterId?: string; overwrite?: boolean },
+) {
+    let cur = state.root;
+    while (cur.children.length > 0) {
+        const next = cur.children[0];
+        const color = next.halfMoves % 2 === 1 ? "white" : "black";
+        if (options?.overwrite || !next.comment) {
+            const commentary = generateAnimeMoveCommentary({
+                san: next.san || "",
+                annotation: next.annotations[0],
+                color,
+                preferredCharacterId: options?.characterId,
+            });
+            next.comment = commentary.formattedMarkdown;
+        }
+        cur = next;
+    }
+}
+

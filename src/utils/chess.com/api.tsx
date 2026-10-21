@@ -41,24 +41,24 @@ type Archive = {
 };
 
 const ChessComPlayer = z.object({
-  rating: z.number(),
-  result: z.string(),
-  username: z.string(),
+  rating: z.number().optional(),
+  result: z.string().optional(),
+  username: z.string().optional(),
 });
 
 const ChessComGames = z.object({
   games: z.array(
     z.object({
-      url: z.string(),
+      url: z.string().optional(),
       pgn: z.string().nullish(),
-      time_control: z.string(),
-      end_time: z.number(),
-      rated: z.boolean(),
-      initial_setup: z.string(),
-      fen: z.string(),
-      rules: z.string(),
-      white: ChessComPlayer,
-      black: ChessComPlayer,
+      time_control: z.string().optional(),
+      end_time: z.number().optional(),
+      rated: z.boolean().optional(),
+      initial_setup: z.string().optional(),
+      fen: z.string().optional(),
+      rules: z.string().optional(),
+      white: ChessComPlayer.optional(),
+      black: ChessComPlayer.optional(),
     }),
   ),
 });
@@ -94,18 +94,19 @@ export async function getChessComAccount(player: string): Promise<ChessComStats 
 }
 
 async function getGameArchives(player: string) {
-  const url = `${baseURL}/pub/player/${player}/games/archives`;
+  const url = `${baseURL}/pub/player/${player.toLowerCase()}/games/archives`;
   const response = await fetch(url, { headers: apiHeaders(), method: "GET" });
   return (await response.json()) as Archive;
 }
 
-export async function downloadChessCom(player: string, timestamp: number | null) {
+export async function downloadChessCom(player: string, timestamp: number | null): Promise<string | null> {
   const timestampDate = new Date(timestamp ?? 0);
   const approximateDate = new Date(timestampDate.getFullYear(), timestampDate.getMonth(), 1);
   const archives = await getGameArchives(player);
-  const file = await resolve(await getDatabasesDir(), `${player}_chesscom.pgn`);
+  const dbDir = await getDatabasesDir();
+  const file = await resolve(dbDir, `${player}_chesscom.pgn`);
   info(`Found ${archives.archives.length} archives for ${player}`);
-  writeTextFile(file, "", {
+  await writeTextFile(file, "", {
     append: false,
   });
   const filteredArchives = archives.archives.filter((archive) => {
@@ -114,7 +115,8 @@ export async function downloadChessCom(player: string, timestamp: number | null)
     return archiveDate >= approximateDate;
   });
 
-  for (const archive of filteredArchives) {
+  for (let i = 0; i < filteredArchives.length; i++) {
+    const archive = filteredArchives[i];
     info(`Fetching games for ${player} from ${archive}`);
     const response = await fetch(archive, {
       headers: apiHeaders(),
@@ -130,23 +132,32 @@ export async function downloadChessCom(player: string, timestamp: number | null)
         color: "red",
         icon: <IconX />,
       });
-      return;
+      return null;
     }
 
-    writeTextFile(file, games.data.games.map((g) => g.pgn).join("\n"), {
-      append: true,
-    });
+    const pgnChunk = games.data.games
+      .map((g) => g.pgn?.trim())
+      .filter((pgn): pgn is string => Boolean(pgn && pgn.length > 0))
+      .join("\n\n");
+
+    if (pgnChunk.length > 0) {
+      await writeTextFile(file, pgnChunk + "\n\n", {
+        append: true,
+      });
+    }
+
     events.progressEvent.emit({
       finished: false,
       id: `chesscom_${player}`,
-      progress: (filteredArchives.indexOf(archive) / filteredArchives.length) * 100,
+      progress: Math.round(((i + 1) / filteredArchives.length) * 100),
     });
   }
   events.progressEvent.emit({
-    finished: false,
+    finished: true,
     id: `chesscom_${player}`,
     progress: 100,
   });
+  return file;
 }
 
 const chessComGameSchema = z.object({

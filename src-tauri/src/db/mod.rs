@@ -2202,4 +2202,55 @@ mod tests {
         let site_count: i64 = sites::table.count().get_result(db).unwrap();
         assert_eq!(site_count, 1, "Only Unknown should remain");
     }
+
+    #[test]
+    fn test_import_badatchess9586() {
+        let appdata = std::env::var("APPDATA").unwrap_or_default();
+        let pgn_path = std::path::PathBuf::from(format!(r"{}\org.croissantsama.app\db\badatchess9586_chesscom.pgn", appdata));
+        let db_path = std::path::PathBuf::from(format!(r"{}\org.croissantsama.app\db\badatchess9586_chesscom.db3", appdata));
+        println!("Checking pgn at: {:?}", pgn_path);
+        if pgn_path.exists() {
+            let file = std::fs::File::open(&pgn_path).unwrap();
+            let mut importer = Importer::new(None);
+            let parsed_games: Vec<TempGame> = BufferedReader::new(file)
+                .into_iter(&mut importer)
+                .flatten()
+                .flatten()
+                .collect();
+            println!("PARSED_GAMES_COUNT = {}", parsed_games.len());
+            assert!(parsed_games.len() >= 700, "Expected >= 700 games, got {}", parsed_games.len());
+
+            // Build or populate the SQLite db3 in the app's databases folder
+            let _ = std::fs::remove_file(&db_path);
+            let mut db = SqliteConnection::establish(db_path.to_str().unwrap()).unwrap();
+            db.batch_execute("PRAGMA journal_mode = OFF; PRAGMA foreign_keys = OFF;").unwrap();
+            db.batch_execute(CREATE_TABLES_SQL).unwrap();
+            set_info_value(&mut db, "Version", DATABASE_VERSION).unwrap();
+            set_info_value(&mut db, "Title", "badatchess9586 Chess.com").unwrap();
+            set_info_value(&mut db, "Description", "Chess.com imported games").unwrap();
+
+            db.transaction::<_, diesel::result::Error, _>(|tx| {
+                for g in &parsed_games {
+                    g.insert_to_db(tx)?;
+                }
+                Ok(())
+            }).unwrap();
+
+            db.batch_execute(INDEXES_SQL).unwrap();
+
+            let game_count: i64 = games::table.count().get_result(&mut db).unwrap();
+            let player_count: i64 = players::table.count().get_result(&mut db).unwrap();
+            let event_count: i64 = events::table.count().get_result(&mut db).unwrap();
+            let site_count: i64 = sites::table.count().get_result(&mut db).unwrap();
+
+            update_info_count(&mut db, "GameCount", game_count).unwrap();
+            update_info_count(&mut db, "PlayerCount", player_count).unwrap();
+            update_info_count(&mut db, "EventCount", event_count).unwrap();
+            update_info_count(&mut db, "SiteCount", site_count).unwrap();
+
+            println!("CONVERTED_DB_SUCCESS: games={}, players={}, events={}, sites={}", game_count, player_count, event_count, site_count);
+        } else {
+            println!("File does not exist: {:?}", pgn_path);
+        }
+    }
 }

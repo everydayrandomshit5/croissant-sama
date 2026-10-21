@@ -14,6 +14,8 @@ import { useTranslation } from "react-i18next";
 import { boardImageAtom, is3dAtom } from "@/state/atoms";
 
 const boardImages2d: string[] = [
+  "sakura-ivory.svg",
+  "obsidian-gold.svg",
   "blue.png",
   "blue2.jpg",
   "blue3.jpg",

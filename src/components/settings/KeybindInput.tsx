@@ -1,6 +1,6 @@
 import { ActionIcon, Box, Group, Kbd } from "@mantine/core";
 import { IconCheck, IconX } from "@tabler/icons-react";
-import { platform } from "@tauri-apps/plugin-os";
+import { safePlatform } from "@/utils/platform";
 import cx from "clsx";
 import { useAtom } from "jotai";
 import { useState } from "react";
@@ -41,7 +41,7 @@ function KeybindInput({
 }
 
 const mapToOs = (key: string): string => {
-  const isMacos = platform() === "macos";
+  const isMacos = safePlatform() === "macos";
 
   if (!isMacos) {
     return key === "meta" ? "ctrl" : key;

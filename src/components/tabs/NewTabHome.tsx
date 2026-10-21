@@ -24,6 +24,8 @@ import {
 } from "@/state/atoms";
 import type { Tab } from "@/utils/tabs";
 import { createTab } from "@/utils/tabs";
+import { galleryOpenAtom } from "@/state/atoms";
+import { IconSparkles } from "@tabler/icons-react";
 import { unwrap } from "@/utils/unwrap";
 import CreateRepertoireModal from "./CreateRepertoireModal";
 import ImportModal from "./ImportModal";
@@ -109,6 +111,7 @@ export default function NewTabHome({ id }: { id: string }) {
 
   const [openModal, setOpenModal] = useState(false);
   const [openRepertoireModal, setOpenRepertoireModal] = useState(false);
+  const setGalleryOpen = useSetAtom(galleryOpenAtom);
   const [, setTabs] = useAtom(tabsAtom);
   const setActiveTab = useSetAtom(activeTabAtom);
 
@@ -241,6 +244,15 @@ export default function NewTabHome({ id }: { id: string }) {
         });
       },
     },
+    {
+      icon: <IconSparkles size={60} color="#F4A6C6" />,
+      title: "Character Codex",
+      description: "12 Sovereigns of Dawn & Dusk, art & audio",
+      label: "Open Codex (Ctrl+G)",
+      onClick: () => {
+        setGalleryOpen(true);
+      },
+    },
   ];
 
   return (
@@ -253,7 +265,45 @@ export default function NewTabHome({ id }: { id: string }) {
       />
       <CreateRepertoireModal opened={openRepertoireModal} setOpened={setOpenRepertoireModal} />
       <Stack gap="lg" pt="sm">
-        <SimpleGrid cols={{ base: 1, sm: 2, lg: 5 }}>
+        <Card
+          p="lg"
+          radius="md"
+          style={{
+            background: "linear-gradient(135deg, rgba(236, 72, 153, 0.18) 0%, rgba(139, 92, 246, 0.18) 100%)",
+            border: "1px solid rgba(244, 166, 198, 0.35)",
+            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.25)",
+          }}
+        >
+          <Group justify="space-between" align="center">
+            <Box>
+              <Group gap="xs" mb={4}>
+                <Badge color="pink" variant="filled" size="sm">
+                  CHESS × ANIME
+                </Badge>
+                <Badge color="violet" variant="light" size="sm">
+                  12 SOVEREIGNS
+                </Badge>
+              </Group>
+              <Text fw={800} size="xl" c="#FFF8F6" style={{ letterSpacing: "0.03em" }}>
+                Croissant_Sama — クロワッサン様
+              </Text>
+              <Text size="sm" c="dimmed">
+                Experience high-precision Stockfish analysis accompanied by ecchi anime dialogue, dynamic combat cut-ins, and bespoke piece art.
+              </Text>
+            </Box>
+            <Button
+              color="pink"
+              variant="gradient"
+              gradient={{ from: "#EC4899", to: "#8B5CF6", deg: 90 }}
+              leftSection={<IconSparkles size={16} />}
+              onClick={() => setGalleryOpen(true)}
+            >
+              Explore Character Codex
+            </Button>
+          </Group>
+        </Card>
+
+        <SimpleGrid cols={{ base: 1, sm: 2, lg: 6 }}>
           {cards.map((card) => (
             <Card shadow="sm" p="lg" radius="md" withBorder key={card.title}>
               <Stack align="center" h="100%" justify="space-between">

@@ -43,6 +43,8 @@ import { keyMapAtom } from "@/state/keybinds";
 import { formatScore } from "@/utils/score";
 import { getNodeAtPath, type TreeNode } from "@/utils/treeReducer";
 import CompleteMoveCell from "./CompleteMoveCell";
+import { AnimeCoachCard } from "@/components/chesssama/AnimeCoachCard";
+
 import styles from "./GameNotation.module.css";
 import OpeningName from "./OpeningName";
 
@@ -98,6 +100,7 @@ function GameNotation({ topBar, controls }: { topBar?: boolean; controls?: React
         )}
         <Stack h="100%" gap={0} style={{ flex: 1, minWidth: 0 }}>
           {topBar && <NotationHeader />}
+          <AnimeCoachCard />
           <ScrollArea flex={1} offsetScrollbars scrollbars="y" viewportRef={viewport}>
             <Stack gap="xs">
               <Box>

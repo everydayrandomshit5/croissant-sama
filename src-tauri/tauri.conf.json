@@ -23,9 +23,9 @@
         "bundleMediaFramework": true
       }
     },
-    "publisher": "Francisco Salgueiro",
-    "shortDescription": "Ultimate Chess Toolkit",
-    "longDescription": "",
+    "publisher": "Croissant_Sama Team",
+    "shortDescription": "Anime Chess GUI with Character Commentary & Gallery",
+    "longDescription": "Desktop anime chess GUI combining high-grade UCI engine analysis with anime art and characters gallery.",
     "macOS": {
       "entitlements": null,
       "exceptionDomain": "",
@@ -45,9 +45,9 @@
     "frontendDist": "../dist",
     "devUrl": "http://localhost:1420"
   },
-  "productName": "en-croissant",
-  "mainBinaryName": "en-croissant",
-  "identifier": "org.encroissant.app",
+  "productName": "Croissant_Sama",
+  "mainBinaryName": "croissant-sama",
+  "identifier": "org.croissantsama.app",
   "plugins": {
     "deep-link": {
       "desktop": {
@@ -76,9 +76,13 @@
     "withGlobalTauri": false,
     "windows": [
       {
-        "title": "En Croissant",
-        "visible": false,
-        "decorations": true
+        "label": "main",
+        "title": "Croissant_Sama",
+        "visible": true,
+        "center": true,
+        "decorations": true,
+        "width": 1280,
+        "height": 800
       }
     ],
     "security": {

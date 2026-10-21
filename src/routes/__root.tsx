@@ -10,6 +10,7 @@ import { platform } from "@tauri-apps/plugin-os";
 import { exit, relaunch } from "@tauri-apps/plugin-process";
 import { openPath, openUrl } from "@tauri-apps/plugin-opener";
 import { check } from "@tauri-apps/plugin-updater";
+import { isTauri, safePlatform } from "@/utils/platform";
 import { useAtom, useAtomValue } from "jotai";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -39,6 +40,7 @@ type MenuAction = {
 };
 
 async function createMenu(menuActions: MenuGroup[]) {
+  if (!isTauri()) return null;
   const items = await Promise.all(
     menuActions.map(async (group) => {
       const submenuItems = await Promise.all(
@@ -134,9 +136,13 @@ function RootLayout() {
   }, [navigate]);
 
   const toggleFullscreen = useCallback(async () => {
-    const currentWindow = getCurrentWindow();
-    const isFullscreen = await currentWindow.isFullscreen();
-    await currentWindow.setFullscreen(!isFullscreen);
+    try {
+      const currentWindow = getCurrentWindow();
+      const isFullscreen = await currentWindow.isFullscreen();
+      await currentWindow.setFullscreen(!isFullscreen);
+    } catch {
+      // browser mode
+    }
   }, []);
 
   const [keyMap] = useAtom(keyMapAtom);
@@ -145,7 +151,7 @@ function RootLayout() {
   useHotkeys(keyMap.OPEN_FILE.keys, openNewFile);
   const [opened, setOpened] = useState(false);
 
-  const isMacOS = platform() === "macos";
+  const isMacOS = safePlatform() === "macos";
 
   const aboutOption = {
     label: t("Menu.Help.About"),
@@ -318,37 +324,46 @@ function RootLayout() {
   const { data: menu } = useSWRImmutable(["menu", menuActions], () => createMenu(menuActions));
 
   useEffect(() => {
-    if (!menu) return;
-    if (
-      isNative ||
-      (import.meta.env.VITE_PLATFORM !== "win32" && import.meta.env.VITE_PLATFORM !== "linux")
-    ) {
-      menu.setAsAppMenu();
-      getCurrentWindow().setDecorations(true);
-    } else {
-      Menu.new().then((m) => m.setAsAppMenu());
-      getCurrentWindow().setDecorations(false);
+    if (!isTauri() || !menu) return;
+    try {
+      if (
+        isNative ||
+        (import.meta.env.VITE_PLATFORM !== "win32" && import.meta.env.VITE_PLATFORM !== "linux")
+      ) {
+        menu.setAsAppMenu();
+        getCurrentWindow().setDecorations(true);
+      } else {
+        Menu.new().then((m) => m.setAsAppMenu());
+        getCurrentWindow().setDecorations(false);
+      }
+    } catch {
+      // browser mode
     }
   }, [menu, isNative]);
 
   useEffect(() => {
-    const unlisten = getCurrentWindow().listen(TauriEvent.DRAG_DROP, (event) => {
-      const payload = event.payload as { paths: string[] };
-      if (payload?.paths) {
-        const pgnFiles = payload.paths.filter((path) => path.toLowerCase().endsWith(".pgn"));
+    if (!isTauri()) return;
+    try {
+      const unlisten = getCurrentWindow().listen(TauriEvent.DRAG_DROP, (event) => {
+        const payload = event.payload as { paths: string[] };
+        if (payload?.paths) {
+          const pgnFiles = payload.paths.filter((path) => path.toLowerCase().endsWith(".pgn"));
 
-        if (pgnFiles.length > 0) {
-          navigate({ to: "/" });
-          for (const file of pgnFiles) {
-            openFile(file, setTabs, setActiveTab);
+          if (pgnFiles.length > 0) {
+            navigate({ to: "/" });
+            for (const file of pgnFiles) {
+              openFile(file, setTabs, setActiveTab);
+            }
           }
         }
-      }
-    });
+      });
 
-    return () => {
-      unlisten.then((fn) => fn());
-    };
+      return () => {
+        unlisten.then((fn) => fn());
+      };
+    } catch {
+      // browser mode
+    }
   }, [navigate, setTabs, setActiveTab]);
 
   return (

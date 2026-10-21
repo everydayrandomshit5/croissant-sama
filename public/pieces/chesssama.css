@@ -1,0 +1,12 @@
+.pawn.white {background-image:url('/pieces/chesssama/white_pawn.png');}
+.knight.white {background-image:url('/pieces/chesssama/white_knight.png');}
+.bishop.white {background-image:url('/pieces/chesssama/white_bishop.png');}
+.rook.white {background-image:url('/pieces/chesssama/white_rook.png');}
+.queen.white {background-image:url('/pieces/chesssama/white_queen.png');}
+.king.white {background-image:url('/pieces/chesssama/white_king.png');}
+.pawn.black {background-image:url('/pieces/chesssama/black_pawn.png');}
+.knight.black {background-image:url('/pieces/chesssama/black_knight.png');}
+.bishop.black {background-image:url('/pieces/chesssama/black_bishop.png');}
+.rook.black {background-image:url('/pieces/chesssama/black_rook.png');}
+.queen.black {background-image:url('/pieces/chesssama/black_queen.png');}
+.king.black {background-image:url('/pieces/chesssama/black_king.png');}

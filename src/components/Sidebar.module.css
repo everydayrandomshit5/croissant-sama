@@ -6,6 +6,7 @@
   border-left: 3px solid transparent;
   border-right: 3px solid transparent;
   justify-content: center;
+  transition: all 0.2s ease;
 }
 
 [data-mantine-color-scheme="light"] .link {
@@ -17,21 +18,25 @@
 }
 
 [data-mantine-color-scheme="light"] .link:hover {
-  color: var(--mantine-color-dark-5);
+  color: #EC4899;
+  background: rgba(236, 72, 153, 0.05);
 }
 
 [data-mantine-color-scheme="dark"] .link:hover {
-  color: var(--mantine-color-gray-0);
+  color: #F4A6C6;
+  background: rgba(244, 166, 198, 0.08);
 }
 
 .active {
-  border-left-color: var(--mantine-primary-color-filled);
+  border-left-color: #EC4899;
+  background: rgba(244, 166, 198, 0.12);
+  box-shadow: inset 3px 0 10px rgba(244, 166, 198, 0.3);
 }
 
 [data-mantine-color-scheme="light"] .active {
-  color: var(--mantine-color-dark-5);
+  color: #BE185D;
 }
 
 [data-mantine-color-scheme="dark"] .active {
-  color: var(--mantine-color-white);
+  color: #FFF8F6;
 }

@@ -13,12 +13,16 @@ import {
   IconArrowDownRight,
   IconArrowRight,
   IconArrowUpRight,
+  IconCheck,
   IconCircleCheckFilled,
   IconDownload,
   type IconProps,
   IconRefresh,
   IconTrash,
+  IconX,
 } from "@tabler/icons-react";
+import { notifications } from "@mantine/notifications";
+import { getDatabasesDir } from "@/utils/directories";
 import { basename } from "@tauri-apps/api/path";
 import { resolve } from "@tauri-apps/api/path";
 import { info } from "@tauri-apps/plugin-log";
@@ -104,14 +108,12 @@ export function AccountCard({
   async function convert(filepath: string, timestamp: number | null) {
     info(`converting ${filepath} ${timestamp}`);
     const filename = title + (type === "lichess" ? " Lichess" : " Chess.com");
-    const dbPath = await resolve(
-      databaseDir,
-      `${filepath
-        .split(/(\\|\/)/g)
-        .pop()
-        ?.replace(".pgn", ".db3")}`,
-    );
+    const dbDir =
+      databaseDir && databaseDir.trim().length > 0 ? databaseDir : await getDatabasesDir();
     const sourceFileName = await basename(filepath);
+    const dbFileName = sourceFileName.replace(/\.pgn$/i, ".db3");
+    const dbPath = await resolve(dbDir, dbFileName);
+
     setConversionState((prev) => ({
       ...prev,
       inProgress: true,
@@ -211,25 +213,48 @@ export function AccountCard({
                 disabled={loading}
                 onClick={async () => {
                   setLoading(true);
+                  const dbDir =
+                    databaseDir && databaseDir.trim().length > 0 ? databaseDir : await getDatabasesDir();
                   const lastGameDate = database ? await getLastGameDate({ database }) : null;
-                  if (type === "lichess") {
-                    await downloadLichess(
-                      title,
-                      lastGameDate,
-                      total - downloadedGames,
-                      setProgress,
-                      token,
-                    );
-                  } else {
-                    await downloadChessCom(title, lastGameDate);
-                  }
-                  const p = await resolve(databaseDir, `${title}_${type}.pgn`);
+                  let p: string | null = null;
                   try {
-                    await convert(p, lastGameDate);
-                    const dbPath = p.replace(".pgn", ".db3");
-                    await commands.deleteEmptyGames(dbPath);
+                    if (type === "lichess") {
+                      await downloadLichess(
+                        title,
+                        lastGameDate,
+                        total - downloadedGames,
+                        setProgress,
+                        token,
+                      );
+                      p = await resolve(dbDir, `${title}_lichess.pgn`);
+                    } else {
+                      p = await downloadChessCom(title, lastGameDate);
+                      if (!p) {
+                        p = await resolve(dbDir, `${title}_chesscom.pgn`);
+                      }
+                    }
+
+                    if (p) {
+                      await convert(p, lastGameDate);
+                      const sourceFileName = await basename(p);
+                      const dbPath = await resolve(dbDir, sourceFileName.replace(/\.pgn$/i, ".db3"));
+                      await commands.deleteEmptyGames(dbPath);
+                      setDatabases(await getDatabases());
+                      notifications.show({
+                        title: "Download Complete",
+                        message: `Successfully imported games for ${title}! ♡`,
+                        color: "teal",
+                        icon: <IconCheck size="1rem" />,
+                      });
+                    }
                   } catch (e) {
-                    console.error(e);
+                    console.error("AccountCard download/conversion error:", e);
+                    notifications.show({
+                      title: "Download / Conversion Failed",
+                      message: e instanceof Error ? e.message : String(e),
+                      color: "red",
+                      icon: <IconX size="1rem" />,
+                    });
                   } finally {
                     setConversionState((prev) => ({
                       ...prev,
@@ -240,8 +265,8 @@ export function AccountCard({
                       targetDatabaseTitle: null,
                       sourceFileName: null,
                     }));
+                    setLoading(false);
                   }
-                  setLoading(false);
                 }}
               >
                 <IconDownload size="1rem" />

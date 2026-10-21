@@ -207,15 +207,22 @@ export const soundVolumeAtom = atomWithStorage<number>("sound-volume", 0.8, unde
     getOnInit: true,
 });
 
-export const pieceSetAtom = atomWithStorage<string>("piece-set", "staunty");
-export const boardImageAtom = atomWithStorage<string>("board-image", "gray.svg");
+export const pieceSetAtom = atomWithStorage<string>("piece-set", "chesssama");
+export const boardImageAtom = atomWithStorage<string>("board-image", "sakura-ivory.svg");
 export const is3dAtom = atomWithStorage<boolean>("is-3d", false);
-export const primaryColorAtom = atomWithStorage<MantineColor>("mantine-primary-color", "blue");
+export const primaryColorAtom = atomWithStorage<MantineColor>("mantine-primary-color", "pink");
 export const sessionsAtom = atomWithStorage<Session[]>("sessions", []);
 export const nativeBarAtom = atomWithStorage<boolean>("native-bar", false);
 export const telemetryEnabledAtom = atomWithStorage<boolean>("telemetry-enabled", true, undefined, {
     getOnInit: true,
 });
+export const galleryOpenAtom = atom<boolean>(false);
+export const animeCoachEnabledAtom = atomWithStorage<boolean>("anime-coach-enabled", true);
+export const animeCoachCharacterAtom = atomWithStorage<string>("anime-coach-character", "auto");
+export const animeCoachCollapsedAtom = atomWithStorage<boolean>("anime-coach-collapsed", false);
+export const animeCoachShowPortraitAtom = atomWithStorage<boolean>("anime-coach-show-portrait", true);
+export const animeCutInsEnabledAtom = atomWithStorage<boolean>("anime-cut-ins-enabled", true);
+
 
 // Recent Files
 

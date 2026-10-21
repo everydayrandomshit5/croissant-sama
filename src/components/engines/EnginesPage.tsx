@@ -33,7 +33,7 @@ import {
   IconSearch,
 } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
-import { platform } from "@tauri-apps/plugin-os";
+import { safePlatform } from "@/utils/platform";
 import { open } from "@tauri-apps/plugin-dialog";
 import { useAtom } from "jotai";
 import { useEffect, useMemo, useState } from "react";
@@ -358,7 +358,7 @@ function EngineSettings({
 
   const [deleteModal, toggleDeleteModal] = useToggle();
   const [jsonModal, toggleJSONModal] = useToggle();
-  const syzygyPathSeparator = platform() === "windows" ? ";" : ":";
+  const syzygyPathSeparator = safePlatform() === "windows" ? ";" : ":";
 
   return (
     <ScrollArea h="100%" offsetScrollbars>

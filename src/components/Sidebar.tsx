@@ -1,5 +1,4 @@
-"use no memo";
-import { AppShellSection, Stack, Tooltip } from "@mantine/core";
+import { AppShellSection, Stack, Tooltip, UnstyledButton } from "@mantine/core";
 import {
   type Icon,
   IconChess,
@@ -7,11 +6,14 @@ import {
   IconDatabase,
   IconFiles,
   IconSettings,
+  IconSparkles,
   IconUser,
 } from "@tabler/icons-react";
 import { Link, useMatchRoute } from "@tanstack/react-router";
 import cx from "clsx";
 import { useTranslation } from "react-i18next";
+import { useSetAtom, useAtomValue } from "jotai";
+import { galleryOpenAtom } from "@/state/atoms";
 import classes from "./Sidebar.module.css";
 
 interface NavbarLinkProps {
@@ -51,6 +53,8 @@ const linksdata = [
 
 export function SideBar() {
   const { t } = useTranslation();
+  const setGalleryOpen = useSetAtom(galleryOpenAtom);
+  const isGalleryOpen = useAtomValue(galleryOpenAtom);
 
   const links = linksdata.map((link) => (
     <NavbarLink {...link} label={t(`SideBar.${link.label}`)} key={link.label} />
@@ -61,6 +65,16 @@ export function SideBar() {
       <AppShellSection grow>
         <Stack justify="center" gap={0}>
           {links}
+          <Tooltip label="Characters Gallery (Ctrl+G)" position="right">
+            <UnstyledButton
+              onClick={() => setGalleryOpen((prev) => !prev)}
+              className={cx(classes.link, {
+                [classes.active]: isGalleryOpen,
+              })}
+            >
+              <IconSparkles size="1.5rem" stroke={1.5} color="#F4A6C6" />
+            </UnstyledButton>
+          </Tooltip>
         </Stack>
       </AppShellSection>
       <AppShellSection>

@@ -26,6 +26,7 @@ import type { KeyedMutator } from "swr";
 import { commands, type DatabaseInfo } from "@/bindings";
 import { databaseConversionStateAtom, storedDatabasesDirAtom } from "@/state/atoms";
 import { getDatabases, type SuccessDatabaseInfo, useDefaultDatabases } from "@/utils/db";
+import { getDatabasesDir } from "@/utils/directories";
 import { capitalize, formatBytes, formatNumber } from "@/utils/format";
 import { unwrap } from "@/utils/unwrap";
 import FileInput from "../common/FileInput";
@@ -62,7 +63,8 @@ function AddDatabase({
   async function convertDB(paths: string[], title: string, description?: string) {
     if (paths.length === 0) return;
     setLoading(true);
-    const dbPath = await resolve(databaseDir, `${title}.db3`);
+    const dbDir = databaseDir && databaseDir.trim().length > 0 ? databaseDir : await getDatabasesDir();
+    const dbPath = await resolve(dbDir, `${title}.db3`);
     const sourceFileName = await basename(paths[0]);
     setConversionState((prev) => ({
       ...prev,
@@ -227,7 +229,8 @@ function DatabaseCard({
 
   async function downloadDatabase(id: number, url: string, name: string) {
     setInProgress(true);
-    const path = await resolve(databaseDir, `${name}.db3`);
+    const dbDir = databaseDir && databaseDir.trim().length > 0 ? databaseDir : await getDatabasesDir();
+    const path = await resolve(dbDir, `${name}.db3`);
     await commands.downloadFile(`db_${id}`, url, path, null, null, null);
     await setDatabases(await getDatabases());
   }

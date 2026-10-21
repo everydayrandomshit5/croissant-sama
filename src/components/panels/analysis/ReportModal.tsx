@@ -14,6 +14,7 @@ const reportSettingsAtom = atomWithStorage("report-settings", {
   novelty: true,
   reversed: true,
   variations: true,
+  animeCommentary: true,
   goMode: { t: "Time", c: 500 } as Exclude<GoMode, { t: "Infinite" }>,
   engine: "",
 });
@@ -97,6 +98,7 @@ function ReportModal({
         if (analysis.status === "ok") {
           addAnalysis(analysis.data, {
             showVariations: form.values.variations,
+            animeCommentary: form.values.animeCommentary,
           });
         }
       })
@@ -173,6 +175,12 @@ function ReportModal({
             label={t("Board.Analysis.ShowVariations")}
             description={t("Board.Analysis.ShowVariations.Desc")}
             {...form.getInputProps("variations", { type: "checkbox" })}
+          />
+
+          <Checkbox
+            label="Anime Character Move Commentary"
+            description="Generate character reaction dialogue on moves into PGN and coach speech bubbles"
+            {...form.getInputProps("animeCommentary", { type: "checkbox" })}
           />
 
           <Group justify="right">

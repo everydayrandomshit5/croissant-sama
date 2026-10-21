@@ -369,7 +369,7 @@ function BoardGame() {
         white: state.whitePlayer,
         black: state.blackPlayer,
         event: eventStr,
-        site: "En Croissant",
+        site: "Croissant_Sama",
         date: dateStr,
         time: timeStr,
         time_control: undefined,

@@ -23,7 +23,7 @@ import NewTabHome from "./NewTabHome";
 import "react-mosaic-component/react-mosaic-component.css";
 
 import "@/styles/react-mosaic.css";
-import { platform } from "@tauri-apps/plugin-os";
+import { safePlatform } from "@/utils/platform";
 import { atomWithStorage } from "jotai/utils";
 import classes from "./BoardsPage.module.css";
 
@@ -133,7 +133,7 @@ export default function BoardsPage() {
   );
 
   useEffect(() => {
-    if (platform() !== "macos") return;
+    if (safePlatform() !== "macos") return;
 
     const handler = (e: KeyboardEvent) => {
       if (e.metaKey && e.key.toLowerCase() === "w") {

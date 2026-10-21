@@ -4,7 +4,13 @@ import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { useEffect, useState } from "react";
 import classes from "./TopBar.module.css";
 
-const appWindow = getCurrentWebviewWindow();
+const getAppWindow = () => {
+  try {
+    return getCurrentWebviewWindow();
+  } catch {
+    return null;
+  }
+};
 
 function IconMinimize() {
   return (
@@ -82,14 +88,21 @@ function TopBar({ menuActions }: { menuActions: MenuGroup[] }) {
   const [isMaximized, setIsMaximized] = useState(false);
 
   useEffect(() => {
+    const win = getAppWindow();
+    if (!win) return;
+
     const checkMaximized = async () => {
-      const maximized = await appWindow.isMaximized();
-      setIsMaximized(maximized);
+      try {
+        const maximized = await win.isMaximized();
+        setIsMaximized(maximized);
+      } catch {
+        // Ignored in browser
+      }
     };
 
     checkMaximized();
 
-    const unlisten = appWindow.onResized(() => {
+    const unlisten = win.onResized(() => {
       checkMaximized();
     });
 
@@ -105,6 +118,9 @@ function TopBar({ menuActions }: { menuActions: MenuGroup[] }) {
           <Box h="1.25rem" w="1.25rem">
             <Image src="/logo.png" fit="fill" />
           </Box>
+          <Text fw={700} fz="0.82rem" c="#F4A6C6" mr="xs" style={{ letterSpacing: "0.05em", fontFamily: "inherit" }}>
+            Croissant_Sama
+          </Text>
           <Group gap={0}>
             {menuActions.map((action) => (
               <Menu
@@ -162,18 +178,18 @@ function TopBar({ menuActions }: { menuActions: MenuGroup[] }) {
       </Box>
       <Box>
         <Group gap={0} data-tauri-drag-region>
-          <Center h="2.25rem" w={45} onClick={() => appWindow.minimize()} className={classes.icon}>
+          <Center h="2.25rem" w={45} onClick={() => getAppWindow()?.minimize()} className={classes.icon}>
             <IconMinimize />
           </Center>
           <Center
             h="2.25rem"
             w={45}
-            onClick={() => appWindow.toggleMaximize()}
+            onClick={() => getAppWindow()?.toggleMaximize()}
             className={classes.icon}
           >
             {isMaximized ? <IconMaximize /> : <IconSquare />}
           </Center>
-          <Center h="2.25rem" w={45} onClick={() => appWindow.close()} className={classes.close}>
+          <Center h="2.25rem" w={45} onClick={() => getAppWindow()?.close()} className={classes.close}>
             <IconX />
           </Center>
         </Group>

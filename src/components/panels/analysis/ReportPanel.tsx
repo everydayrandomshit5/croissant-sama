@@ -1,5 +1,5 @@
-import { Grid, Group, Paper, ScrollArea, Stack, Text } from "@mantine/core";
-import { IconZoomCheck } from "@tabler/icons-react";
+import { Badge, Box, Button, Grid, Group, Paper, ScrollArea, Stack, Text } from "@mantine/core";
+import { IconSparkles, IconZoomCheck } from "@tabler/icons-react";
 import cx from "clsx";
 import equal from "fast-deep-equal";
 import { useAtom, useAtomValue } from "jotai";
@@ -10,7 +10,8 @@ import { commands } from "@/bindings";
 import EvalChart from "@/components/common/EvalChart";
 import ProgressButton from "@/components/common/ProgressButton";
 import { TreeStateContext } from "@/components/common/TreeStateContext";
-import { activeTabAtom, currentReportModalOpenAtom } from "@/state/atoms";
+import { activeTabAtom, currentReportModalOpenAtom, animeCoachCharacterAtom } from "@/state/atoms";
+import { getCoachReviewVerdict } from "@/components/chesssama/coachVerdict";
 import { ANNOTATION_INFO, isBasicAnnotation } from "@/utils/annotation";
 import { getGameStats, getMainLine } from "@/utils/chess";
 import classes from "./AnalysisPanel.module.css";
@@ -24,11 +25,19 @@ function ReportPanel() {
   const store = useContext(TreeStateContext)!;
   const root = useStore(store, (s) => s.root);
   const [reportingMode, setReportingMode] = useAtom(currentReportModalOpenAtom);
+  const coachCharacterId = useAtomValue(animeCoachCharacterAtom);
+
+  const stats = useMemo(() => getGameStats(root), [root]);
+
+  const coachVerdict = useMemo(() => {
+    return getCoachReviewVerdict(coachCharacterId, stats.whiteAccuracy, true);
+  }, [coachCharacterId, stats.whiteAccuracy]);
 
   const inProgress = useStore(store, (s) => s.report.inProgress);
   const setInProgress = useStore(store, (s) => s.setReportInProgress);
+  const generateAnimeCommentary = useStore(store, (s) => s.generateAnimeCommentary);
 
-  const stats = useMemo(() => getGameStats(root), [root]);
+
 
   const handleCancel = useCallback(() => {
     commands.cancelAnalysis(`report_${activeTab}`);
@@ -69,6 +78,47 @@ function ReportPanel() {
           inProgress={inProgress}
           setInProgress={setInProgress}
         />
+
+        <Button
+          variant="light"
+          color="pink"
+          size="xs"
+          leftSection={<IconSparkles size="0.875rem" />}
+          disabled={root.children.length === 0}
+          onClick={() => generateAnimeCommentary({ overwrite: true })}
+        >
+          Generate Anime Dialogue Commentary
+        </Button>
+
+        {stats.whiteAccuracy > 0 && stats.blackAccuracy > 0 && (
+          <Paper
+            withBorder
+            p="xs"
+            style={{
+              background: "linear-gradient(135deg, rgba(244, 166, 198, 0.08) 0%, rgba(212, 175, 55, 0.08) 100%)",
+              borderColor: coachVerdict.themeColor,
+            }}
+          >
+            <Group justify="space-between" mb={6} align="center">
+              <Group gap="xs">
+                <img
+                  src={coachVerdict.avatarImage}
+                  alt={coachVerdict.speakerName}
+                  style={{ width: 24, height: 24, borderRadius: "50%", objectFit: "contain" }}
+                />
+                <Badge color={coachVerdict.badgeColor} variant="filled" size="xs">
+                  {coachVerdict.badgeLabel}
+                </Badge>
+              </Group>
+              <Text size="xs" c="dimmed" fs="italic">
+                {coachVerdict.speakerTitle}
+              </Text>
+            </Group>
+            <Text fz="xs" fs="italic" c="#FFF5FB">
+              "{coachVerdict.verdictText}"
+            </Text>
+          </Paper>
+        )}
 
         {stats.whiteAccuracy > 0 && stats.blackAccuracy > 0 && (
           <Group grow>

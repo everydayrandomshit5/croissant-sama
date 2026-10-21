@@ -1,4 +1,4 @@
-import { Box } from "@mantine/core";
+import { Box, Tooltip } from "@mantine/core";
 import type { Color, Square } from "chessops";
 import type { ReactNode } from "react";
 import { ANNOTATION_INFO, type Annotation } from "@/utils/annotation";
@@ -8,10 +8,12 @@ export default function AnnotationHint({
   square,
   annotation,
   orientation,
+  comment,
 }: {
   square: Square;
   annotation: Annotation;
   orientation: Color;
+  comment?: string;
 }) {
   const { file, rank } = squareToCoordinates(square, orientation);
   const color = ANNOTATION_INFO[annotation]?.color || "gray";
@@ -26,8 +28,29 @@ export default function AnnotationHint({
         bottom: `${(rank - 1) * 12.5}%`,
       }}
     >
-      <Box pl="90%">
-        {
+        <Tooltip
+          label={
+            comment
+              ? comment.replace(/\*\*/g, "").replace(/\*/g, "")
+              : ANNOTATION_INFO[annotation]?.name || annotation
+          }
+          position="top"
+          withArrow
+          multiline
+          w={260}
+          styles={{
+            tooltip: {
+              backgroundColor: "rgba(21, 21, 28, 0.95)",
+              border: "1px solid #F4A6C6",
+              color: "#FFF5FB",
+              fontSize: "0.85rem",
+              padding: "8px 12px",
+              borderRadius: "8px",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.5)",
+              fontStyle: "italic",
+            },
+          }}
+        >
           <Box
             style={{
               transform: "translateY(-40%) translateX(-50%)",
@@ -35,6 +58,7 @@ export default function AnnotationHint({
               filter: "url(#shadow)",
               overflow: "initial",
               borderRadius: "50%",
+              cursor: "pointer",
             }}
             w="45%"
             h="45%"
@@ -52,8 +76,7 @@ export default function AnnotationHint({
               <g>{glyphToSvg[annotation]}</g>
             </svg>
           </Box>
-        }
-      </Box>
+        </Tooltip>
     </Box>
   );
 }

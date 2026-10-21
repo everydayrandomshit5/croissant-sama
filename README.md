@@ -1,60 +1,56 @@
 <br />
 <div align="center">
-  <a href="https://github.com/franciscoBSalgueiro/en-croissant">
-    <img width="115" height="115" src="https://github.com/franciscoBSalgueiro/en-croissant/blob/master/src-tauri/icons/icon.png" alt="Logo">
-  </a>
+  <img width="128" height="128" src="./src-tauri/icons/icon.png" alt="Croissant_Sama Logo">
 
-<h3 align="center">En Croissant</h3>
+  <h1 align="center">Croissant_Sama</h1>
 
   <p align="center">
-    The Ultimate Chess Toolkit
+    <strong>Desktop Anime Chess GUI • UCI Engine Analysis • Waifu Dialogue Commentary</strong>
     <br />
-    <a href="https://www.encroissant.org"><strong>encroissant.org</strong></a>
+    An Anime-themed Fork of <a href="https://github.com/franciscoBSalgueiro/en-croissant">En Croissant</a>
     <br />
-    <br />
-    <a href="https://discord.gg/tdYzfDbSSW">Discord Server</a>
-    ·
-    <a href="https://www.encroissant.org/download">Download</a>
-    .
-    <a href="https://www.encroissant.org/docs">Explore the docs</a>
+    Licensed under <strong>GNU General Public License v3.0 (GPL-3.0)</strong>
   </p>
 </div>
 
-En-Croissant is an open-source, cross-platform chess GUI that aims to be powerful, customizable and easy to use.
+<div align="center">
+  <img src="./public/thumbnail.png" alt="Croissant_Sama Showcase Thumbnail" width="100%" />
+</div>
 
-## Features
+<br />
 
-- Store and analyze your games from [lichess.org](https://lichess.org) and [chess.com](https://chess.com)
-- Multi-engine analysis. Supports all UCI engines
-- Prepare a repertoire and train it with spaced repetition
-- Simple engine and database installation and management
-- Absolute or partial position search in the database
+**Croissant_Sama** combines the battle-tested, production-grade desktop chess toolkit of **En Croissant** with a distinctive anime visual identity, interactive waifu coach dialogue, custom piece sets, and character art galleries.
 
-<img src="https://github.com/franciscoBSalgueiro/encroisssant-site/blob/master/public/showcase.webp" />
+## Key Features
 
-## Building from source
+- **Anime Character Game Review & Dialogue:** Real-time character coach commentary on every move. Hear Queen Seraphine and your army react dynamically to blunders (`??`), mistakes (`?`), dubious moves (`?!`), good moves (`!`), and brilliant sacrifices (`!!`), complete with whispered engine best-line suggestions and PGN comment export.
+- **Anime Aesthetic Themes:** Custom board color schemes including *Sakura & Ivory* and *Obsidian & Gold*.
+- **12-Piece Chibi Set:** 2D character chibi icons rendered crisply via Chessground with mirrored White-and-Pink (House of Dawn) and Black-and-Gold (House of Dusk) uniforms.
+- **Characters Art Gallery (Ctrl+G):** Dedicated in-app gallery showcasing high-resolution character hero art, lore archive, and side-by-side White vs. Black comparisons.
+- **Full UCI Engine Management:** Powered by Stockfish 17, Maia, and external UCI engines with live multi-engine evaluation, CP/WDL graphs, and blunder detection.
+- **Database & Repertoire Training:** Local SQLite database search, opening tree explorer, PGN/FEN handling, and spaced-repetition repertoire training.
 
-Refer to the [Tauri documentation](https://tauri.app/start/prerequisites/) for the requirements on your platform.
+## Building from Source
 
-En-Croissant uses pnpm as the package manager for dependencies. Refer to the [pnpm install instructions](https://pnpm.io/installation) for how to install it on your platform.
+Croissant_Sama is built with **Tauri v2**, **Rust**, **React 19**, **TypeScript**, and **Mantine UI**.
 
 ```bash
-git clone https://github.com/franciscoBSalgueiro/en-croissant
-cd en-croissant
+# Clone the repository
+git clone https://github.com/croissantsama/croissant-sama.git
+cd croissant-sama
+
+# Install dependencies
 pnpm install
-pnpm build
+
+# Run in development mode
+pnpm tauri dev
+
+# Build production bundle
+pnpm tauri build
 ```
 
-The built app can be found at `src-tauri/target/release`
+## Credits & License
 
-## Donate
+- **Forked from:** [En Croissant](https://github.com/franciscoBSalgueiro/en-croissant) by Francisco Salgueiro and contributors.
+- **License:** GNU General Public License v3.0 ([GPL-3.0](./LICENSE)).
 
-If you wish to support the development of this GUI, you can do so [here](https://encroissant.org/support). All donations are greatly appreciated!
-
-## Contributing
-
-For contributing to this project please refer to the [Contributing guide](./CONTRIBUTING.md).
-
-## License
-
-This software is licensed under GPL-3.0 License.

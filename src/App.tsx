@@ -52,6 +52,8 @@ import "mantine-datatable/styles.css";
 
 import "@/styles/global.css";
 
+import { GalleryModal } from "@/components/chesssama/GalleryModal";
+import { isTauri } from "@/utils/platform";
 import { commands } from "./bindings";
 import { handleDeepLink, openCommandLineFile } from "./utils/launch";
 
@@ -82,25 +84,34 @@ const router = createRouter({
     loadDirs: async () => {
       const store = getDefaultStore();
 
-      const documentDir = await getDocumentDir();
-      const databasesDir = await getDatabasesDir();
-      const enginesDir = await getEnginesDir();
-      const puzzlesDir = await getPuzzlesDir();
+      let documentDir = "";
+      let databasesDir = "";
+      let enginesDir = "";
+      let puzzlesDir = "";
 
-      if (!store.get(storedDocumentDirAtom)) {
-        store.set(storedDocumentDirAtom, documentDir);
-      }
+      try {
+        documentDir = await getDocumentDir();
+        databasesDir = await getDatabasesDir();
+        enginesDir = await getEnginesDir();
+        puzzlesDir = await getPuzzlesDir();
 
-      if (!store.get(storedDatabasesDirAtom)) {
-        store.set(storedDatabasesDirAtom, databasesDir);
-      }
+        if (!store.get(storedDocumentDirAtom)) {
+          store.set(storedDocumentDirAtom, documentDir);
+        }
 
-      if (!store.get(storedEnginesDirAtom)) {
-        store.set(storedEnginesDirAtom, enginesDir);
-      }
+        if (!store.get(storedDatabasesDirAtom)) {
+          store.set(storedDatabasesDirAtom, databasesDir);
+        }
 
-      if (!store.get(storedPuzzlesDirAtom)) {
-        store.set(storedPuzzlesDirAtom, puzzlesDir);
+        if (!store.get(storedEnginesDirAtom)) {
+          store.set(storedEnginesDirAtom, enginesDir);
+        }
+
+        if (!store.get(storedPuzzlesDirAtom)) {
+          store.set(storedPuzzlesDirAtom, puzzlesDir);
+        }
+      } catch (err) {
+        console.warn("Directories loaded in browser fallback mode:", err);
       }
 
       return {
@@ -132,18 +143,17 @@ const checkForUpdates = async () => {
       }
     }
   } catch (e) {
-    error(`Failed to check for updates: ${e}`);
+    console.warn(`Check for updates skipped or failed: ${e}`);
   }
 };
 
 const preloadReferenceDb = async (store: ReturnType<typeof getDefaultStore>) => {
-  const referenceDb = store.get(referenceDbAtom);
-  if (referenceDb) {
-    info(`Preloading reference database: ${referenceDb}`);
-    commands.preloadReferenceDb(referenceDb).catch((e: unknown) => {
-      info(`Failed to preload reference database: ${e}`);
-    });
-  }
+  try {
+    const referenceDb = store.get(referenceDbAtom);
+    if (referenceDb) {
+      commands.preloadReferenceDb(referenceDb).catch(() => {});
+    }
+  } catch {}
 };
 
 const navigateToBoard = () => router.navigate({ to: "/" });
@@ -158,44 +168,61 @@ function useAppStartup() {
     initialized.current = true;
 
     const startupSequence = async () => {
-      await commands.closeSplashscreen();
-      await initUserAgent();
+      try {
+        await commands.closeSplashscreen();
+      } catch (e) {
+        // Ignored if not running in Tauri
+      }
 
-      const detach = await attachConsole();
-      info("React app started successfully");
+      try {
+        await initUserAgent();
+      } catch (e) {
+        // Ignored in browser
+      }
+
+      let detach: (() => void) | undefined;
+      try {
+        detach = await attachConsole();
+        info("React app started successfully");
+      } catch (e) {
+        console.log("React app running in browser mode");
+      }
 
       checkForUpdates();
 
       const store = getDefaultStore();
       const telemetryEnabled = store.get(telemetryEnabledAtom);
 
-      posthog.init("phc_kgEBtifs0EgWlrl4ROYEbnsQ1b7BS2W5BKLNyXe7f8z", {
-        api_host: "https://app.posthog.com",
-        autocapture: false,
-        capture_pageview: false,
-        capture_pageleave: false,
-        disable_session_recording: true,
-      });
+      try {
+        posthog.init("phc_kgEBtifs0EgWlrl4ROYEbnsQ1b7BS2W5BKLNyXe7f8z", {
+          api_host: "https://app.posthog.com",
+          autocapture: false,
+          capture_pageview: false,
+          capture_pageleave: false,
+          disable_session_recording: true,
+        });
 
-      if (telemetryEnabled) {
-        posthog.capture("app_started", { version: await getVersion() });
-      }
-      const unlistenFile = await listen<string>("open-cli-file", ({ payload }) => {
-        void openCommandLineFile(payload, setTabs, setActiveTab, navigateToBoard);
-      });
+        if (telemetryEnabled) {
+          posthog.capture("app_started", { version: await getVersion() });
+        }
+      } catch {}
+
+      let unlistenFile: (() => void) | undefined;
+      try {
+        unlistenFile = await listen<string>("open-cli-file", ({ payload }) => {
+          void openCommandLineFile(payload, setTabs, setActiveTab, navigateToBoard);
+        });
+      } catch {}
 
       try {
         const matches = await getMatches();
-        if (matches.args.file.occurrences > 0) {
-          info(`Opening file from command line: ${matches.args.file.value}`);
+        if (matches?.args?.file?.occurrences > 0) {
           if (typeof matches.args.file.value === "string") {
             const file = matches.args.file.value;
             await openCommandLineFile(file, setTabs, setActiveTab, navigateToBoard);
           }
         }
-      } catch (e) {
-        warn(`Failed to parse CLI args: ${e}`);
-      }
+      } catch {}
 
       await preloadReferenceDb(store);
 
@@ -213,12 +240,10 @@ function useAppStartup() {
             void handleDeepLink(url, setTabs, setActiveTab, navigateToBoard);
           }
         });
-      } catch (e) {
-        warn(`Failed to setup deep links: ${e}`);
-      }
+      } catch {}
 
       return () => {
-        unlistenFile();
+        if (unlistenFile) unlistenFile();
         if (detach) detach();
         if (unlistenDeepLink) unlistenDeepLink();
       };
@@ -251,6 +276,7 @@ export default function App() {
 
   useEffect(() => {
     let unlisten: (() => void) | undefined;
+    if (!isTauri()) return;
 
     void listen<[number, number, string | null]>("convert_progress", (event) => {
       const [totalGames, elapsedMs, sourceFileName] = event.payload;
@@ -340,6 +366,7 @@ export default function App() {
       >
         <ContextMenuProvider>
           <Notifications />
+          <GalleryModal />
           <RouterProvider router={router} />
         </ContextMenuProvider>
       </MantineProvider>

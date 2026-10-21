@@ -98,11 +98,14 @@ pub struct AppState {
 #[tauri::command]
 #[specta::specta]
 async fn close_splashscreen(window: Window) -> Result<(), String> {
-    window
-        .get_webview_window("main")
-        .expect("no window labeled 'main' found")
-        .show()
-        .unwrap();
+    if let Some(w) = window.get_webview_window("main") {
+        let _ = w.show();
+        let _ = w.unminimize();
+        let _ = w.set_focus();
+    }
+    let _ = window.show();
+    let _ = window.unminimize();
+    let _ = window.set_focus();
     Ok(())
 }
 
@@ -268,6 +271,15 @@ fn main() {
             #[cfg(desktop)]
             app.handle()
                 .plugin(tauri_plugin_updater::Builder::new().build())?;
+
+            if let Some(window) = app.get_webview_window("main") {
+                log::info!("Ensuring main window is shown and focused");
+                let _ = window.show();
+                let _ = window.unminimize();
+                let _ = window.set_focus();
+            } else {
+                log::warn!("Webview window 'main' not found during setup");
+            }
 
             log::info!("Finished rust initialization");
 
