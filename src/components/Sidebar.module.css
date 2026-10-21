@@ -18,25 +18,25 @@
 }
 
 [data-mantine-color-scheme="light"] .link:hover {
-  color: #EC4899;
+  color: #ec4899;
   background: rgba(236, 72, 153, 0.05);
 }
 
 [data-mantine-color-scheme="dark"] .link:hover {
-  color: #F4A6C6;
+  color: #f4a6c6;
   background: rgba(244, 166, 198, 0.08);
 }
 
 .active {
-  border-left-color: #EC4899;
+  border-left-color: #ec4899;
   background: rgba(244, 166, 198, 0.12);
   box-shadow: inset 3px 0 10px rgba(244, 166, 198, 0.3);
 }
 
 [data-mantine-color-scheme="light"] .active {
-  color: #BE185D;
+  color: #be185d;
 }
 
 [data-mantine-color-scheme="dark"] .active {
-  color: #FFF8F6;
+  color: #fff8f6;
 }

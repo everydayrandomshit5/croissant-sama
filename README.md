@@ -25,7 +25,9 @@
 ## ✨ Key Features
 
 ### 👑 12 Sovereigns of Dawn & Dusk (Full Piece Roster)
+
 The entire chessboard has been reimagined as two opposing noble houses featuring bespoke 9:16 high-resolution splash art and custom piece icons:
+
 - **House of Dawn (White)**:
   - **Queen**: Seraphine, Sovereign of the Rose Dawn
   - **King**: Aurelian, The Silver Sovereign
@@ -42,6 +44,7 @@ The entire chessboard has been reimagined as two opposing noble houses featuring
   - **Pawn**: Dusk Squire, The Bratty Vanguard
 
 ### 🎬 Live Motion Video Showcase (720p HD)
+
 - Integrated high-definition 720p anime motion video loops generated for Sovereigns.
 - Multi-video navigation directly inside the Character Codex with intuitive `<` and `>` arrow controls:
   - **Idle Stance**: Seductive breathing, swaying hair, dynamic posture.
@@ -49,6 +52,7 @@ The entire chessboard has been reimagined as two opposing noble houses featuring
   - **Climax / Victory**: Celebratory triumphant climax pose with radiant magical aura.
 
 ### 💬 Dynamic Waifu Coach Commentary & Voice
+
 - Real-time anime coach commentary reacting passionately to your gameplay:
   - **Brilliant Sacrifices (`!!`)**: Ecstatic praises and flushed admiration.
   - **Blunders (`??`) & Mistakes (`?`)**: Dramatic scolding, playful teasing, and desperate pleas.
@@ -57,9 +61,11 @@ The entire chessboard has been reimagined as two opposing noble houses featuring
 - Whispered Stockfish best-move suggestions with instant PGN commentary export.
 
 ### ♟️ Bespoke Anime Chibi Piece Set
+
 - Custom-crafted 2D anime chibi character sprites rendered cleanly via Chessground for both Dawn (ivory/pink) and Dusk (charcoal/gold) sides.
 
 ### ⚡ Professional Chess Toolkit (En Croissant Engine)
+
 - **UCI Engine Management**: Multi-PV evaluation powered by Stockfish 17, Maia neural networks, and custom engines.
 - **Game Review & Graphs**: Full-game precision graphs, centipawn loss analysis, and blunder detection.
 - **Chess.com & Lichess Sync**: One-click PGN import, tournament database exploration, and user game downloads.
@@ -70,11 +76,13 @@ The entire chessboard has been reimagined as two opposing noble houses featuring
 ## 🛠️ Building & Running
 
 ### Prerequisites
+
 - [Node.js](https://nodejs.org/) (v18+)
 - [pnpm](https://pnpm.io/) (v9+)
 - [Rust](https://rustup.rs/) (v1.80+)
 
 ### Setup
+
 ```bash
 # Clone repository
 git clone https://github.com/everydayrandomshit5/croissant-sama.git
@@ -96,5 +104,6 @@ pnpm tauri build
 ---
 
 ## 📜 Credits & License
+
 - **Original Project:** Forked from [En Croissant](https://github.com/franciscoBSalgueiro/en-croissant) by Francisco Salgueiro and contributors.
 - **License:** GNU General Public License v3.0 ([GPL-3.0](./LICENSE)).

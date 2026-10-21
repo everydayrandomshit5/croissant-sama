@@ -28,55 +28,55 @@ export default function AnnotationHint({
         bottom: `${(rank - 1) * 12.5}%`,
       }}
     >
-        <Tooltip
-          label={
-            comment
-              ? comment.replace(/\*\*/g, "").replace(/\*/g, "")
-              : ANNOTATION_INFO[annotation]?.name || annotation
-          }
-          position="top"
-          withArrow
-          multiline
-          w={260}
-          styles={{
-            tooltip: {
-              backgroundColor: "rgba(21, 21, 28, 0.95)",
-              border: "1px solid #F4A6C6",
-              color: "#FFF5FB",
-              fontSize: "0.85rem",
-              padding: "8px 12px",
-              borderRadius: "8px",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.5)",
-              fontStyle: "italic",
-            },
+      <Tooltip
+        label={
+          comment
+            ? comment.replace(/\*\*/g, "").replace(/\*/g, "")
+            : ANNOTATION_INFO[annotation]?.name || annotation
+        }
+        position="top"
+        withArrow
+        multiline
+        w={260}
+        styles={{
+          tooltip: {
+            backgroundColor: "rgba(21, 21, 28, 0.95)",
+            border: "1px solid #F4A6C6",
+            color: "#FFF5FB",
+            fontSize: "0.85rem",
+            padding: "8px 12px",
+            borderRadius: "8px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.5)",
+            fontStyle: "italic",
+          },
+        }}
+      >
+        <Box
+          style={{
+            transform: "translateY(-40%) translateX(-50%)",
+            zIndex: 100,
+            filter: "url(#shadow)",
+            overflow: "initial",
+            borderRadius: "50%",
+            cursor: "pointer",
           }}
+          w="45%"
+          h="45%"
+          pos="absolute"
+          bg={color}
+          variant="filled"
         >
-          <Box
-            style={{
-              transform: "translateY(-40%) translateX(-50%)",
-              zIndex: 100,
-              filter: "url(#shadow)",
-              overflow: "initial",
-              borderRadius: "50%",
-              cursor: "pointer",
-            }}
-            w="45%"
-            h="45%"
-            pos="absolute"
-            bg={color}
-            variant="filled"
-          >
-            <svg viewBox="0 0 100 100">
-              <title>{annotation}</title>
-              <defs>
-                <filter id="shadow">
-                  <feDropShadow dx="0" dy="1" floodOpacity="0.3" stdDeviation="0" />
-                </filter>
-              </defs>
-              <g>{glyphToSvg[annotation]}</g>
-            </svg>
-          </Box>
-        </Tooltip>
+          <svg viewBox="0 0 100 100">
+            <title>{annotation}</title>
+            <defs>
+              <filter id="shadow">
+                <feDropShadow dx="0" dy="1" floodOpacity="0.3" stdDeviation="0" />
+              </filter>
+            </defs>
+            <g>{glyphToSvg[annotation]}</g>
+          </svg>
+        </Box>
+      </Tooltip>
     </Box>
   );
 }

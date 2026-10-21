@@ -221,10 +221,12 @@ export const galleryActiveTabAtom = atom<string>("idle");
 export const animeCoachEnabledAtom = atomWithStorage<boolean>("anime-coach-enabled", true);
 export const animeCoachCharacterAtom = atomWithStorage<string>("anime-coach-character", "auto");
 export const animeCoachCollapsedAtom = atomWithStorage<boolean>("anime-coach-collapsed", false);
-export const animeCoachShowPortraitAtom = atomWithStorage<boolean>("anime-coach-show-portrait", true);
+export const animeCoachShowPortraitAtom = atomWithStorage<boolean>(
+    "anime-coach-show-portrait",
+    true,
+);
 export const animeCoachVideoModeAtom = atomWithStorage<boolean>("anime-coach-video-mode", false);
 export const animeCutInsEnabledAtom = atomWithStorage<boolean>("anime-cut-ins-enabled", true);
-
 
 // Recent Files
 

@@ -65,28 +65,32 @@ export function AnimeCutInOverlay() {
     let title = "BRILLIANT STRIKE !!";
     let subtitle = "TACTICAL MASTERPIECE";
     let accentColor = "#38BDF8";
-    let bgGradient = "linear-gradient(135deg, rgba(14, 165, 233, 0.85) 0%, rgba(2, 6, 23, 0.95) 100%)";
+    let bgGradient =
+      "linear-gradient(135deg, rgba(14, 165, 233, 0.85) 0%, rgba(2, 6, 23, 0.95) 100%)";
 
     if (isCheckmate) {
       type = "checkmate";
       title = "CHECKMATE !!";
       subtitle = "TOTAL CONQUEST";
       accentColor = "#F59E0B";
-      bgGradient = "linear-gradient(135deg, rgba(245, 158, 11, 0.88) 0%, rgba(15, 23, 42, 0.96) 100%)";
+      bgGradient =
+        "linear-gradient(135deg, rgba(245, 158, 11, 0.88) 0%, rgba(15, 23, 42, 0.96) 100%)";
       playAnimeSfx("checkmate");
     } else if (isPromotion) {
       type = "promotion";
       title = "QUEEN ASCENSION ♕";
       subtitle = "ROYAL PROMOTION CLIMAX";
       accentColor = "#EC4899";
-      bgGradient = "linear-gradient(135deg, rgba(236, 72, 153, 0.88) 0%, rgba(30, 10, 60, 0.96) 100%)";
+      bgGradient =
+        "linear-gradient(135deg, rgba(236, 72, 153, 0.88) 0%, rgba(30, 10, 60, 0.96) 100%)";
       playAnimeSfx("promotion");
     } else if (isBlunder) {
       type = "blunder";
       title = "DISASTROUS BLUNDER ??";
       subtitle = "DEFENSES STRIPPED BARE";
       accentColor = "#EF4444";
-      bgGradient = "linear-gradient(135deg, rgba(239, 68, 68, 0.88) 0%, rgba(20, 5, 10, 0.96) 100%)";
+      bgGradient =
+        "linear-gradient(135deg, rgba(239, 68, 68, 0.88) 0%, rgba(20, 5, 10, 0.96) 100%)";
       playAnimeSfx("blunder");
     } else {
       playAnimeSfx("brilliant");
@@ -123,7 +127,12 @@ export function AnimeCutInOverlay() {
   if (!enabled || !activeCutIn) return null;
 
   return (
-    <Transition mounted={!!activeCutIn} transition="slide-left" duration={250} timingFunction="ease-out">
+    <Transition
+      mounted={!!activeCutIn}
+      transition="slide-left"
+      duration={250}
+      timingFunction="ease-out"
+    >
       {(styles) => (
         <Box
           style={{

@@ -37,8 +37,6 @@ function ReportPanel() {
   const setInProgress = useStore(store, (s) => s.setReportInProgress);
   const generateAnimeCommentary = useStore(store, (s) => s.generateAnimeCommentary);
 
-
-
   const handleCancel = useCallback(() => {
     commands.cancelAnalysis(`report_${activeTab}`);
   }, [activeTab]);
@@ -95,7 +93,8 @@ function ReportPanel() {
             withBorder
             p="xs"
             style={{
-              background: "linear-gradient(135deg, rgba(244, 166, 198, 0.08) 0%, rgba(212, 175, 55, 0.08) 100%)",
+              background:
+                "linear-gradient(135deg, rgba(244, 166, 198, 0.08) 0%, rgba(212, 175, 55, 0.08) 100%)",
               borderColor: coachVerdict.themeColor,
             }}
           >

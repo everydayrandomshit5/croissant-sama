@@ -118,7 +118,13 @@ function TopBar({ menuActions }: { menuActions: MenuGroup[] }) {
           <Box h="1.25rem" w="1.25rem">
             <Image src="/logo.png" fit="fill" />
           </Box>
-          <Text fw={700} fz="0.82rem" c="#F4A6C6" mr="xs" style={{ letterSpacing: "0.05em", fontFamily: "inherit" }}>
+          <Text
+            fw={700}
+            fz="0.82rem"
+            c="#F4A6C6"
+            mr="xs"
+            style={{ letterSpacing: "0.05em", fontFamily: "inherit" }}
+          >
             Croissant_Sama
           </Text>
           <Group gap={0}>
@@ -178,7 +184,12 @@ function TopBar({ menuActions }: { menuActions: MenuGroup[] }) {
       </Box>
       <Box>
         <Group gap={0} data-tauri-drag-region>
-          <Center h="2.25rem" w={45} onClick={() => getAppWindow()?.minimize()} className={classes.icon}>
+          <Center
+            h="2.25rem"
+            w={45}
+            onClick={() => getAppWindow()?.minimize()}
+            className={classes.icon}
+          >
             <IconMinimize />
           </Center>
           <Center
@@ -189,7 +200,12 @@ function TopBar({ menuActions }: { menuActions: MenuGroup[] }) {
           >
             {isMaximized ? <IconMaximize /> : <IconSquare />}
           </Center>
-          <Center h="2.25rem" w={45} onClick={() => getAppWindow()?.close()} className={classes.close}>
+          <Center
+            h="2.25rem"
+            w={45}
+            onClick={() => getAppWindow()?.close()}
+            className={classes.close}
+          >
             <IconX />
           </Center>
         </Group>

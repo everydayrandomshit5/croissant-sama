@@ -270,7 +270,8 @@ export default function NewTabHome({ id }: { id: string }) {
           p="lg"
           radius="md"
           style={{
-            background: "linear-gradient(135deg, rgba(236, 72, 153, 0.18) 0%, rgba(139, 92, 246, 0.18) 100%)",
+            background:
+              "linear-gradient(135deg, rgba(236, 72, 153, 0.18) 0%, rgba(139, 92, 246, 0.18) 100%)",
             border: "1px solid rgba(244, 166, 198, 0.35)",
             boxShadow: "0 4px 20px rgba(0, 0, 0, 0.25)",
           }}
@@ -289,7 +290,8 @@ export default function NewTabHome({ id }: { id: string }) {
                 Croissant_Sama — クロワッサン様
               </Text>
               <Text size="sm" c="dimmed">
-                Experience high-precision Stockfish analysis accompanied by ecchi anime dialogue, dynamic combat cut-ins, and bespoke piece art.
+                Experience high-precision Stockfish analysis accompanied by ecchi anime dialogue,
+                dynamic combat cut-ins, and bespoke piece art.
               </Text>
             </Box>
             <Button

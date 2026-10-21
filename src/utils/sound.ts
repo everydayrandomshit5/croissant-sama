@@ -105,7 +105,9 @@ let audioCtx: AudioContext | null = null;
 function getAudioContext(): AudioContext | null {
     if (typeof window === "undefined") return null;
     if (!audioCtx) {
-        const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+        const AudioContextClass =
+            window.AudioContext ||
+            (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
         if (AudioContextClass) {
             audioCtx = new AudioContextClass();
         }
@@ -128,7 +130,7 @@ export function playAnimeSfx(type: "brilliant" | "blunder" | "promotion" | "cuti
     masterGain.connect(ctx.destination);
 
     if (type === "cutin" || type === "brilliant") {
-        const freqs = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+        const freqs = [523.25, 659.25, 783.99, 1046.5, 1318.51];
         freqs.forEach((f, i) => {
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
@@ -168,7 +170,7 @@ export function playAnimeSfx(type: "brilliant" | "blunder" | "promotion" | "cuti
             osc.stop(now + idx * 0.08 + 0.7);
         });
     } else if (type === "checkmate") {
-        [261.63, 329.63, 392.00, 523.25].forEach((f) => {
+        [261.63, 329.63, 392.0, 523.25].forEach((f) => {
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
             osc.type = "sine";

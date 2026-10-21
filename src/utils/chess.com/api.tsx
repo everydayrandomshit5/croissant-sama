@@ -99,7 +99,10 @@ async function getGameArchives(player: string) {
   return (await response.json()) as Archive;
 }
 
-export async function downloadChessCom(player: string, timestamp: number | null): Promise<string | null> {
+export async function downloadChessCom(
+  player: string,
+  timestamp: number | null,
+): Promise<string | null> {
   const timestampDate = new Date(timestamp ?? 0);
   const approximateDate = new Date(timestampDate.getFullYear(), timestampDate.getMonth(), 1);
   const archives = await getGameArchives(player);

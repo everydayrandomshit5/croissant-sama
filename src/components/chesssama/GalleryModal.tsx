@@ -60,9 +60,10 @@ export function GalleryModal() {
     CHARACTERS_ROSTER.find((c) => c.id === selectedCharId) || CHARACTERS_ROSTER[0];
 
   // For compare mode: find the counterpart character (White <-> Black)
-  const counterpartId = selectedChar.side === "white"
-    ? `black_${selectedChar.pieceType}`
-    : `white_${selectedChar.pieceType}`;
+  const counterpartId =
+    selectedChar.side === "white"
+      ? `black_${selectedChar.pieceType}`
+      : `white_${selectedChar.pieceType}`;
   const counterpartChar =
     CHARACTERS_ROSTER.find((c) => c.id === counterpartId) || CHARACTERS_ROSTER[0];
 
@@ -73,8 +74,22 @@ export function GalleryModal() {
 
   // Sample dialogue for preview
   const sampledDialogue = generateAnimeMoveCommentary({
-    san: previewCategory === "checkmate" ? "Qxf7#" : previewCategory === "promotion" ? "e8=Q" : previewCategory === "capture" ? "Bxf7+" : "e4",
-    annotation: previewCategory === "blunder" ? "??" : previewCategory === "brilliant" ? "!!" : previewCategory === "dubious" ? "?!" : "!",
+    san:
+      previewCategory === "checkmate"
+        ? "Qxf7#"
+        : previewCategory === "promotion"
+          ? "e8=Q"
+          : previewCategory === "capture"
+            ? "Bxf7+"
+            : "e4",
+    annotation:
+      previewCategory === "blunder"
+        ? "??"
+        : previewCategory === "brilliant"
+          ? "!!"
+          : previewCategory === "dubious"
+            ? "?!"
+            : "!",
     color: selectedChar.side,
     preferredCharacterId: selectedChar.id,
   });
@@ -106,7 +121,8 @@ export function GalleryModal() {
             </Badge>
           </Group>
           <Text c="dimmed" size="xs" mr="xl">
-            Shortcut: <kbd style={{ background: "#2A2A35", padding: "2px 6px", borderRadius: 4 }}>Ctrl+G</kbd>
+            Shortcut:{" "}
+            <kbd style={{ background: "#2A2A35", padding: "2px 6px", borderRadius: 4 }}>Ctrl+G</kbd>
           </Text>
         </Group>
       }
@@ -199,7 +215,12 @@ export function GalleryModal() {
                         {char.name}
                       </Text>
                       {char.animationVideo && (
-                        <Badge size="compact-xs" color="violet" variant="filled" style={{ fontSize: "9px" }}>
+                        <Badge
+                          size="compact-xs"
+                          color="violet"
+                          variant="filled"
+                          style={{ fontSize: "9px" }}
+                        >
                           🎬 Video
                         </Badge>
                       )}
@@ -262,7 +283,8 @@ export function GalleryModal() {
                 <Box w="100%">
                   {(() => {
                     const charVideos = getCharacterVideos(selectedChar);
-                    const safeIndex = charVideos.length > 0 ? Math.min(videoIndex, charVideos.length - 1) : 0;
+                    const safeIndex =
+                      charVideos.length > 0 ? Math.min(videoIndex, charVideos.length - 1) : 0;
                     const currentVideo = charVideos[safeIndex];
 
                     const availableTabs = ["idle"];
@@ -271,15 +293,17 @@ export function GalleryModal() {
                     availableTabs.push("piece");
                     if (charVideos.length > 0) availableTabs.push("video");
 
-                    const currentTab = availableTabs.includes(activeMediaTab) ? activeMediaTab : "idle";
+                    const currentTab = availableTabs.includes(activeMediaTab)
+                      ? activeMediaTab
+                      : "idle";
                     const activeImage =
                       currentTab === "action"
                         ? selectedChar.actionImage
                         : currentTab === "special"
-                        ? selectedChar.specialImage
-                        : currentTab === "piece"
-                        ? selectedChar.iconImage
-                        : selectedChar.heroImage;
+                          ? selectedChar.specialImage
+                          : currentTab === "piece"
+                            ? selectedChar.iconImage
+                            : selectedChar.heroImage;
 
                     return (
                       <>
@@ -291,17 +315,26 @@ export function GalleryModal() {
                           radius="md"
                           mb="md"
                         >
-                          <Tabs.List grow style={{ background: "#13131C", padding: 3, borderRadius: 8 }}>
+                          <Tabs.List
+                            grow
+                            style={{ background: "#13131C", padding: 3, borderRadius: 8 }}
+                          >
                             <Tabs.Tab value="idle" style={{ fontWeight: 700, fontSize: "11px" }}>
                               Idle Art
                             </Tabs.Tab>
                             {selectedChar.actionImage && (
-                              <Tabs.Tab value="action" style={{ fontWeight: 700, fontSize: "11px" }}>
+                              <Tabs.Tab
+                                value="action"
+                                style={{ fontWeight: 700, fontSize: "11px" }}
+                              >
                                 Combat
                               </Tabs.Tab>
                             )}
                             {selectedChar.specialImage && (
-                              <Tabs.Tab value="special" style={{ fontWeight: 700, fontSize: "11px" }}>
+                              <Tabs.Tab
+                                value="special"
+                                style={{ fontWeight: 700, fontSize: "11px" }}
+                              >
                                 Climax
                               </Tabs.Tab>
                             )}
@@ -309,7 +342,11 @@ export function GalleryModal() {
                               Piece
                             </Tabs.Tab>
                             {charVideos.length > 0 && (
-                              <Tabs.Tab value="video" color="violet" style={{ fontWeight: 700, fontSize: "11px" }}>
+                              <Tabs.Tab
+                                value="video"
+                                color="violet"
+                                style={{ fontWeight: 700, fontSize: "11px" }}
+                              >
                                 🎬 Video ({charVideos.length})
                               </Tabs.Tab>
                             )}
@@ -317,7 +354,15 @@ export function GalleryModal() {
                         </Tabs>
 
                         {currentTab === "video" && currentVideo ? (
-                          <Box style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", gap: 8 }}>
+                          <Box
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              width: "100%",
+                              gap: 8,
+                            }}
+                          >
                             {/* Video Navigation Bar with small arrows */}
                             <Group justify="space-between" align="center" w="100%" px="xs" mb={4}>
                               <ActionIcon
@@ -325,7 +370,11 @@ export function GalleryModal() {
                                 color="violet"
                                 size="sm"
                                 disabled={charVideos.length <= 1}
-                                onClick={() => setVideoIndex((i) => (i - 1 + charVideos.length) % charVideos.length)}
+                                onClick={() =>
+                                  setVideoIndex(
+                                    (i) => (i - 1 + charVideos.length) % charVideos.length,
+                                  )
+                                }
                               >
                                 <IconChevronLeft size="1rem" />
                               </ActionIcon>
@@ -367,7 +416,8 @@ export function GalleryModal() {
                               }}
                             />
                             <Text size="10px" c="dimmed" fs="italic">
-                              Use the arrows above to navigate all motion animations for {selectedChar.name}
+                              Use the arrows above to navigate all motion animations for{" "}
+                              {selectedChar.name}
                             </Text>
                           </Box>
                         ) : (
@@ -391,7 +441,10 @@ export function GalleryModal() {
                                 maxHeight: "480px",
                                 objectFit: "contain",
                                 borderRadius: "12px",
-                                filter: currentTab === "piece" ? "drop-shadow(0 8px 24px rgba(0,0,0,0.8))" : "none",
+                                filter:
+                                  currentTab === "piece"
+                                    ? "drop-shadow(0 8px 24px rgba(0,0,0,0.8))"
+                                    : "none",
                               }}
                             />
                           </Box>
@@ -408,7 +461,11 @@ export function GalleryModal() {
                   <Title order={2} c="#FFF8F6">
                     {selectedChar.name}
                   </Title>
-                  <Text size="sm" c={selectedChar.side === "white" ? "#F4A6C6" : "#D4AF37"} fw={600}>
+                  <Text
+                    size="sm"
+                    c={selectedChar.side === "white" ? "#F4A6C6" : "#D4AF37"}
+                    fw={600}
+                  >
                     {selectedChar.title}
                   </Text>
                 </Box>
@@ -439,22 +496,44 @@ export function GalleryModal() {
                   </Group>
 
                   <Group gap={6} mb="sm">
-                    {(["brilliant", "blunder", "promotion", "dubious", "capture", "checkmate"] as DialogueCategory[]).map(
-                      (cat) => (
-                        <Button
-                          key={cat}
-                          size="compact-xs"
-                          variant={previewCategory === cat ? "filled" : "light"}
-                          color={cat === "blunder" ? "red" : cat === "brilliant" ? "cyan" : cat === "promotion" ? "pink" : "gray"}
-                          onClick={() => handlePreviewDialogue(cat)}
-                        >
-                          {cat.toUpperCase()}
-                        </Button>
-                      ),
-                    )}
+                    {(
+                      [
+                        "brilliant",
+                        "blunder",
+                        "promotion",
+                        "dubious",
+                        "capture",
+                        "checkmate",
+                      ] as DialogueCategory[]
+                    ).map((cat) => (
+                      <Button
+                        key={cat}
+                        size="compact-xs"
+                        variant={previewCategory === cat ? "filled" : "light"}
+                        color={
+                          cat === "blunder"
+                            ? "red"
+                            : cat === "brilliant"
+                              ? "cyan"
+                              : cat === "promotion"
+                                ? "pink"
+                                : "gray"
+                        }
+                        onClick={() => handlePreviewDialogue(cat)}
+                      >
+                        {cat.toUpperCase()}
+                      </Button>
+                    ))}
                   </Group>
 
-                  <Box p="xs" style={{ background: "#0F0F16", borderRadius: 6, borderLeft: "3px solid #F4A6C6" }}>
+                  <Box
+                    p="xs"
+                    style={{
+                      background: "#0F0F16",
+                      borderRadius: 6,
+                      borderLeft: "3px solid #F4A6C6",
+                    }}
+                  >
                     <Text size="xs" c="#F1F5F9" style={{ fontStyle: "italic", lineHeight: 1.5 }}>
                       "{sampledDialogue.dialogue}"
                     </Text>
@@ -464,16 +543,28 @@ export function GalleryModal() {
                 <Card radius="md" p="md" bg="#161620" style={{ border: "1px solid #2A2A35" }}>
                   <Stack gap="xs">
                     <Group justify="space-between">
-                      <Text size="xs" c="dimmed">Hair & Features:</Text>
-                      <Text size="xs" fw={600} c="#FFF8F6">{selectedChar.hair}</Text>
+                      <Text size="xs" c="dimmed">
+                        Hair & Features:
+                      </Text>
+                      <Text size="xs" fw={600} c="#FFF8F6">
+                        {selectedChar.hair}
+                      </Text>
                     </Group>
                     <Group justify="space-between">
-                      <Text size="xs" c="dimmed">Signature Prop:</Text>
-                      <Text size="xs" fw={600} c="#FFF8F6">{selectedChar.prop}</Text>
+                      <Text size="xs" c="dimmed">
+                        Signature Prop:
+                      </Text>
+                      <Text size="xs" fw={600} c="#FFF8F6">
+                        {selectedChar.prop}
+                      </Text>
                     </Group>
                     <Group justify="space-between">
-                      <Text size="xs" c="dimmed">House Uniform:</Text>
-                      <Text size="xs" fw={600} c="#FFF8F6">{selectedChar.outfit}</Text>
+                      <Text size="xs" c="dimmed">
+                        House Uniform:
+                      </Text>
+                      <Text size="xs" fw={600} c="#FFF8F6">
+                        {selectedChar.outfit}
+                      </Text>
                     </Group>
                   </Stack>
                 </Card>
@@ -494,12 +585,7 @@ export function GalleryModal() {
                       border: `1px solid ${isWhite ? "rgba(244, 166, 198, 0.3)" : "rgba(212, 175, 55, 0.3)"}`,
                     }}
                   >
-                    <Badge
-                      color={isWhite ? "pink" : "yellow"}
-                      variant="filled"
-                      size="sm"
-                      mb="sm"
-                    >
+                    <Badge color={isWhite ? "pink" : "yellow"} variant="filled" size="sm" mb="sm">
                       House of {isWhite ? "Dawn" : "Dusk"}
                     </Badge>
                     <Title order={3} c={isWhite ? "#FFF8F6" : "#D4AF37"}>

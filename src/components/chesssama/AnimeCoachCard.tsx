@@ -32,10 +32,7 @@ import {
   animeCoachVideoModeAtom,
   galleryOpenAtom,
 } from "@/state/atoms";
-import {
-  generateAnimeMoveCommentary,
-  type AnimeDialogueResult,
-} from "./animeDialogue";
+import { generateAnimeMoveCommentary, type AnimeDialogueResult } from "./animeDialogue";
 import { CHARACTERS_ROSTER } from "./characterData";
 import { formatScore } from "@/utils/score";
 import { getNodeAtPath } from "@/utils/treeReducer";
@@ -65,9 +62,7 @@ export function AnimeCoachCard() {
   // Check if parent has variation lines (best line suggested by engine)
   const bestLineNode = useMemo(() => {
     if (!parentNode || parentNode.children.length <= 1) return null;
-    const variationChild = parentNode.children.find(
-      (c) => c.san && c.san !== currentNode.san,
-    );
+    const variationChild = parentNode.children.find((c) => c.san && c.san !== currentNode.san);
     return variationChild || null;
   }, [parentNode, currentNode.san]);
 
@@ -103,9 +98,8 @@ export function AnimeCoachCard() {
       if (match) {
         const [, speaker, dialogue] = match;
         const char =
-          CHARACTERS_ROSTER.find(
-            (c) => c.name.toLowerCase() === speaker.toLowerCase(),
-          ) || CHARACTERS_ROSTER[0];
+          CHARACTERS_ROSTER.find((c) => c.name.toLowerCase() === speaker.toLowerCase()) ||
+          CHARACTERS_ROSTER[0];
         return {
           speaker,
           speakerTitle: char.title,
@@ -124,8 +118,7 @@ export function AnimeCoachCard() {
     }
 
     // Generate fresh dialogue
-    const sanVariant =
-      reRollCount > 0 ? `${currentNode.san}_${reRollCount}` : currentNode.san;
+    const sanVariant = reRollCount > 0 ? `${currentNode.san}_${reRollCount}` : currentNode.san;
 
     return generateAnimeMoveCommentary({
       san: sanVariant,
@@ -138,10 +131,7 @@ export function AnimeCoachCard() {
 
   // Find active character data entry
   const activeChar = useMemo(() => {
-    return (
-      CHARACTERS_ROSTER.find((c) => c.id === commentary.characterId) ||
-      CHARACTERS_ROSTER[0]
-    );
+    return CHARACTERS_ROSTER.find((c) => c.id === commentary.characterId) || CHARACTERS_ROSTER[0];
   }, [commentary.characterId]);
 
   // Determine current active pose: Idle, Action, or Special
@@ -231,11 +221,7 @@ export function AnimeCoachCard() {
 
   const isBlunder = commentary.category === "blunder";
   const isBrilliant = commentary.category === "brilliant";
-  const borderColor = isBlunder
-    ? "#FF6B6B"
-    : isBrilliant
-      ? "#22B8CF"
-      : commentary.themeColor;
+  const borderColor = isBlunder ? "#FF6B6B" : isBrilliant ? "#22B8CF" : commentary.themeColor;
 
   return (
     <Card
@@ -317,7 +303,10 @@ export function AnimeCoachCard() {
 
         <Group gap={4} wrap="nowrap">
           {/* Toggle Portrait Art view */}
-          <Tooltip label={showPortrait ? "Hide Character Portrait" : "Show Character Portrait"} position="top">
+          <Tooltip
+            label={showPortrait ? "Hide Character Portrait" : "Show Character Portrait"}
+            position="top"
+          >
             <ActionIcon
               size="sm"
               variant={showPortrait ? "light" : "subtle"}
@@ -330,7 +319,12 @@ export function AnimeCoachCard() {
 
           {/* Toggle Live Motion Video Animation */}
           {activeChar.animationVideo && (
-            <Tooltip label={videoMode ? "Switch to Static Art Pose" : "Switch to Live Motion Animation (Video)"} position="top">
+            <Tooltip
+              label={
+                videoMode ? "Switch to Static Art Pose" : "Switch to Live Motion Animation (Video)"
+              }
+              position="top"
+            >
               <ActionIcon
                 size="sm"
                 variant={videoMode ? "filled" : "subtle"}
@@ -408,11 +402,7 @@ export function AnimeCoachCard() {
             color="gray"
             onClick={() => setCollapsed((v) => !v)}
           >
-            {collapsed ? (
-              <IconChevronDown size="0.9rem" />
-            ) : (
-              <IconChevronUp size="0.9rem" />
-            )}
+            {collapsed ? <IconChevronDown size="0.9rem" /> : <IconChevronUp size="0.9rem" />}
           </ActionIcon>
         </Group>
       </Group>
@@ -516,7 +506,13 @@ export function AnimeCoachCard() {
 
             {/* If there's an engine recommended best line, display interactive button */}
             {bestLineNode && bestLineNode.san && (
-              <Group justify="space-between" align="center" mt="xs" pt={6} style={{ borderTop: "1px dashed rgba(255,255,255,0.12)" }}>
+              <Group
+                justify="space-between"
+                align="center"
+                mt="xs"
+                pt={6}
+                style={{ borderTop: "1px dashed rgba(255,255,255,0.12)" }}
+              >
                 <Group gap={6}>
                   <Badge size="xs" color="teal" variant="light">
                     Engine Best Move

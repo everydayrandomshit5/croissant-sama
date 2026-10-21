@@ -82,6 +82,13 @@ body {
 }
 
 /* Anime font styling */
-html, body, button, input, select, textarea {
-  font-family: 'Outfit', 'M PLUS Rounded 1c', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+html,
+body,
+button,
+input,
+select,
+textarea {
+  font-family:
+    "Outfit", "M PLUS Rounded 1c", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
 }

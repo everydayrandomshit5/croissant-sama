@@ -214,7 +214,9 @@ export function AccountCard({
                 onClick={async () => {
                   setLoading(true);
                   const dbDir =
-                    databaseDir && databaseDir.trim().length > 0 ? databaseDir : await getDatabasesDir();
+                    databaseDir && databaseDir.trim().length > 0
+                      ? databaseDir
+                      : await getDatabasesDir();
                   const lastGameDate = database ? await getLastGameDate({ database }) : null;
                   let p: string | null = null;
                   try {
@@ -237,7 +239,10 @@ export function AccountCard({
                     if (p) {
                       await convert(p, lastGameDate);
                       const sourceFileName = await basename(p);
-                      const dbPath = await resolve(dbDir, sourceFileName.replace(/\.pgn$/i, ".db3"));
+                      const dbPath = await resolve(
+                        dbDir,
+                        sourceFileName.replace(/\.pgn$/i, ".db3"),
+                      );
                       await commands.deleteEmptyGames(dbPath);
                       setDatabases(await getDatabases());
                       notifications.show({

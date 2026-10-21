@@ -29,7 +29,13 @@ function AboutModal({
         const osVersion = await OSVersion();
         setInfo({ version, tauri, os, architecture, osVersion });
       } catch {
-        setInfo({ version: "0.15.1", tauri: "2.10.2", os: "web", architecture: "x86_64", osVersion: "10" });
+        setInfo({
+          version: "0.15.1",
+          tauri: "2.10.2",
+          os: "web",
+          architecture: "x86_64",
+          osVersion: "10",
+        });
       }
     }
     load();
@@ -61,7 +67,8 @@ function AboutModal({
 
         <Text size="sm" c="dimmed" mt="xs">
           A bespoke anime chess GUI engineered with Tauri v2, Rust, React, Mantine, and Chessground.
-          Featuring all 12 sovereigns of the House of Dawn and House of Dusk, real-time ecchi anime coaching, and dynamic combat cut-ins.
+          Featuring all 12 sovereigns of the House of Dawn and House of Dusk, real-time ecchi anime
+          coaching, and dynamic combat cut-ins.
         </Text>
 
         <Text size="xs" c="dimmed" mt="sm">
