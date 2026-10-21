@@ -13,14 +13,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - platform: 'macos-latest' # for Arm based macs (M1 and above).
-            args: '--target aarch64-apple-darwin --bundles dmg'
-          - platform: 'macos-latest' # for Intel based macs.
-            args: '--target x86_64-apple-darwin --bundles dmg'
           - platform: 'ubuntu-24.04'
-            args: ''
+            args: '--bundles deb,appimage --no-sign'
           - platform: 'windows-latest'
-            args: '--bundles nsis'
+            args: '--bundles nsis --no-sign'
+          - platform: 'macos-latest'
+            args: '--target aarch64-apple-darwin --bundles dmg --no-sign'
+          - platform: 'macos-latest'
+            args: '--target x86_64-apple-darwin --bundles dmg --no-sign'
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout repository
@@ -31,12 +31,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            libwebkit2gtk-4.1-0=2.44.0-2 \
-            libwebkit2gtk-4.1-dev=2.44.0-2 \
-            libjavascriptcoregtk-4.1-0=2.44.0-2 \
-            libjavascriptcoregtk-4.1-dev=2.44.0-2 \
-            gir1.2-javascriptcoregtk-4.1=2.44.0-2 \
-            gir1.2-webkit2-4.1=2.44.0-2 \
+            libwebkit2gtk-4.1-dev \
+            libjavascriptcoregtk-4.1-dev \
             libappindicator3-dev \
             librsvg2-dev \
             patchelf
@@ -44,7 +40,6 @@ jobs:
       - name: Rust setup
         uses: dtolnay/rust-toolchain@stable
         with:
-          # Only install macos targets on macos runners
           targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
       - name: Rust cache
@@ -68,16 +63,28 @@ jobs:
 
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
-
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
           CI: false
         with:
           tagName: ${{ github.ref_name }}
-          releaseName: "v__VERSION__"
-          releaseBody: "See the assets to download and install this version."
-          releaseDraft: true
+          releaseName: "Croissant_Sama v__VERSION__"
+          releaseBody: |
+            ### 🥐 Croissant_Sama v__VERSION__ — Desktop Anime Chess GUI
+            
+            Welcome to the official public release of **Croissant_Sama**!
+            
+            #### 📦 Download Assets:
+            - **Windows**: `Croissant_Sama___VERSION___x64-setup.exe` (NSIS Installer)
+            - **Linux (Debian/Ubuntu/Mint)**: `croissant-sama___VERSION___amd64.deb`
+            - **Linux (Universal)**: `croissant-sama___VERSION___amd64.AppImage`
+            - **macOS (Apple Silicon & Intel)**: `Croissant_Sama___VERSION____dmg`
+            
+            #### ✨ Highlights:
+            - 12 Sovereigns of Dawn & Dusk with bespoke 9:16 high-resolution splash art.
+            - 720p HD Live Motion Video suites with in-app arrow navigation controls.
+            - Interactive ecchi & tsundere coach commentary for brilliant moves, blunders, and promotions.
+            - Stockfish 17 engine analysis, Chess.com game downloader, opening tree, and spaced-repetition training.
+          releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
