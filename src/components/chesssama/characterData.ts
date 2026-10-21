@@ -61,17 +61,17 @@ export const CHARACTERS_ROSTER: CharacterEntry[] = [
                 type: "idle",
             },
             {
-                title: "Spicy Idle Motion",
+                title: "Anime Motion (Idle)",
                 src: "/assets/chesssama/animations/white_queen_idle.mp4",
                 type: "idle",
             },
             {
-                title: "Spicy Combat Strike",
+                title: "Combat Strike (Live2D)",
                 src: "/assets/chesssama/animations/white_queen_action.mp4",
                 type: "action",
             },
             {
-                title: "Spicy Climax / Victory",
+                title: "Climax Victory (Live2D)",
                 src: "/assets/chesssama/animations/white_queen_special.mp4",
                 type: "special",
             },
@@ -94,7 +94,7 @@ export const CHARACTERS_ROSTER: CharacterEntry[] = [
         animationVideo: "/assets/chesssama/animations/white_king_idle.mp4",
         videos: [
             {
-                title: "Spicy Idle Motion",
+                title: "Anime Motion (Idle)",
                 src: "/assets/chesssama/animations/white_king_idle.mp4",
                 type: "idle",
             },
@@ -208,17 +208,17 @@ export const CHARACTERS_ROSTER: CharacterEntry[] = [
                 type: "idle",
             },
             {
-                title: "Spicy Idle Motion",
+                title: "Anime Motion (Idle)",
                 src: "/assets/chesssama/animations/black_queen_idle.mp4",
                 type: "idle",
             },
             {
-                title: "Spicy Combat Strike",
+                title: "Combat Strike (Live2D)",
                 src: "/assets/chesssama/animations/black_queen_action.mp4",
                 type: "action",
             },
             {
-                title: "Spicy Climax / Victory",
+                title: "Climax Victory (Live2D)",
                 src: "/assets/chesssama/animations/black_queen_special.mp4",
                 type: "special",
             },

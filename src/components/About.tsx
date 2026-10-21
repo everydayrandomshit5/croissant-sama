@@ -67,7 +67,7 @@ function AboutModal({
 
         <Text size="sm" c="dimmed" mt="xs">
           A bespoke anime chess GUI engineered with Tauri v2, Rust, React, Mantine, and Chessground.
-          Featuring all 12 sovereigns of the House of Dawn and House of Dusk, real-time ecchi anime
+          Featuring all 12 sovereigns of the House of Dawn and House of Dusk, real-time anime dialogue
           coaching, and dynamic combat cut-ins.
         </Text>
 

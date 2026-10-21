@@ -348,7 +348,7 @@ export function AnimeCoachCard() {
             </ActionIcon>
           </Tooltip>
 
-          {/* Re-roll spicy line button */}
+          {/* Re-roll anime dialogue button */}
           <Tooltip label="Re-roll Anime Dialogue" position="top">
             <ActionIcon
               size="sm"

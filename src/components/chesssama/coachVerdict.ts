@@ -39,7 +39,7 @@ export function getCoachReviewVerdict(
                     "Master... that accuracy was breathtaking and so commanding! You had total control over every single square... my heart won't stop fluttering for you! ♡";
             } else if (isMed) {
                 verdictText =
-                    "A passionate and spicy battle, Master! We had a few wild moments, but your dominant spirit carried us through... fufu. ♡";
+                    "A passionate and spirited battle, Master! We had a few wild moments, but your dominant spirit carried us through... fufu. ♡";
             } else {
                 verdictText =
                     "Kyaaa! Master, that was a dangerously reckless game! So many blunders and exposed pieces... you need private tactical discipline with me right away, b-baka!";

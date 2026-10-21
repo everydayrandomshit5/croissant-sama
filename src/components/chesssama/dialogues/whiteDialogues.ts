@@ -49,7 +49,7 @@ export const SERAPHINE_WHITE_DIALOGUES: CharacterDialogueMap = {
     ],
     interesting: [
         {
-            text: "Oh my... so spicy! I didn't expect you to thrust forward so boldly into enemy territory... my pulse is racing! ♡",
+            text: "Oh my... so bold! I didn't expect you to thrust forward so daringly into enemy territory... my pulse is racing! ♡",
             mood: "seductive",
         },
         {

@@ -43,20 +43,20 @@ def sync_character_data():
         if os.path.exists(legacy_file) and os.path.getsize(legacy_file) > 100_000:
             vids.append(('Original Motion (Live2D)', f'/assets/chesssama/animations/{cid}.mp4', 'idle'))
 
-        # 2. Check New Spicy Idle
+        # 2. Check New Anime Idle
         idle_file = os.path.join(ANIM_DIR, f"{cid}_idle.mp4")
         if os.path.exists(idle_file) and os.path.getsize(idle_file) > 100_000:
-            vids.append(('Spicy Idle Motion', f'/assets/chesssama/animations/{cid}_idle.mp4', 'idle'))
+            vids.append(('Anime Motion (Idle)', f'/assets/chesssama/animations/{cid}_idle.mp4', 'idle'))
 
-        # 3. Check Spicy Action
+        # 3. Check Anime Action
         action_file = os.path.join(ANIM_DIR, f"{cid}_action.mp4")
         if os.path.exists(action_file) and os.path.getsize(action_file) > 100_000:
-            vids.append(('Spicy Combat Strike', f'/assets/chesssama/animations/{cid}_action.mp4', 'action'))
+            vids.append(('Combat Strike (Live2D)', f'/assets/chesssama/animations/{cid}_action.mp4', 'action'))
 
-        # 4. Check Spicy Special/Climax
+        # 4. Check Anime Special/Climax
         special_file = os.path.join(ANIM_DIR, f"{cid}_special.mp4")
         if os.path.exists(special_file) and os.path.getsize(special_file) > 100_000:
-            vids.append(('Spicy Climax / Victory', f'/assets/chesssama/animations/{cid}_special.mp4', 'special'))
+            vids.append(('Climax Victory (Live2D)', f'/assets/chesssama/animations/{cid}_special.mp4', 'special'))
 
         if not vids:
             continue
@@ -83,7 +83,7 @@ def sync_character_data():
         f.write(content)
     print("[SYNC] Synchronized characterData.ts with all animations (originals preserved).")
 
-def generate_video(char_id: str, mode: str, prompt: str = "mode -- spicy"):
+def generate_video(char_id: str, mode: str, prompt: str = "mode -- anime"):
     source_img = os.path.join(FULL_DIR, f"{char_id}_{mode}.png")
     target_mp4 = os.path.join(ANIM_DIR, f"{char_id}_{mode}.mp4")
 
@@ -174,7 +174,7 @@ def generate_video(char_id: str, mode: str, prompt: str = "mode -- spicy"):
 def main():
     target_char = sys.argv[1] if len(sys.argv) > 1 and sys.argv[1] not in ["", "all", "None"] else None
     target_mode = sys.argv[2] if len(sys.argv) > 2 and sys.argv[2] not in ["", "all", "None"] else None
-    prompt = sys.argv[3] if len(sys.argv) > 3 else "mode -- spicy"
+    prompt = sys.argv[3] if len(sys.argv) > 3 else "mode -- anime"
 
     os.makedirs(ANIM_DIR, exist_ok=True)
 

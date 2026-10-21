@@ -290,7 +290,7 @@ export default function NewTabHome({ id }: { id: string }) {
                 Croissant_Sama — クロワッサン様
               </Text>
               <Text size="sm" c="dimmed">
-                Experience high-precision Stockfish analysis accompanied by ecchi anime dialogue,
+                Experience high-precision Stockfish analysis accompanied by interactive anime dialogue,
                 dynamic combat cut-ins, and bespoke piece art.
               </Text>
             </Box>

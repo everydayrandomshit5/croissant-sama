@@ -490,7 +490,7 @@ export const DUSK_SQUIRE_DIALOGUES: CharacterDialogueMap = {
     ],
     interesting: [
         {
-            text: "Oho? A sneaky little pawn thrust? I didn't think Senpai had the guts to play something so spicy!",
+            text: "Oho? A sneaky little pawn thrust? I didn't think Senpai had the guts to play something so bold!",
             mood: "proud",
         },
     ],

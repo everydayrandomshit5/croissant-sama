@@ -811,7 +811,7 @@ function addAnalysis(
                 ANNOTATION_INFO[a].nag > ANNOTATION_INFO[b].nag ? 1 : -1,
             );
 
-            // Generate anime ecchi dialogue commentary
+            // Generate anime dialogue commentary
             if (options?.animeCommentary) {
                 const bestSan =
                     i > 0 &&
