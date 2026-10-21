@@ -1,3 +1,9 @@
+export interface CharacterVideo {
+  title: string;
+  src: string;
+  type: "idle" | "action" | "special";
+}
+
 export interface CharacterEntry {
   id: string;
   name: string;
@@ -13,6 +19,22 @@ export interface CharacterEntry {
   specialImage?: string;
   iconImage: string;
   animationVideo?: string;
+  videos?: CharacterVideo[];
+}
+
+export function getCharacterVideos(char: CharacterEntry): CharacterVideo[] {
+  if (char.videos && char.videos.length > 0) {
+    return char.videos;
+  }
+  const result: CharacterVideo[] = [];
+  if (char.animationVideo) {
+    result.push({
+      title: "Idle Motion (Live2D)",
+      src: char.animationVideo,
+      type: "idle",
+    });
+  }
+  return result;
 }
 
 export const CHARACTERS_ROSTER: CharacterEntry[] = [
@@ -32,6 +54,28 @@ export const CHARACTERS_ROSTER: CharacterEntry[] = [
     specialImage: "/assets/chesssama/full/white_queen_special.png",
     iconImage: "/pieces/chesssama/white_queen.png",
     animationVideo: "/assets/chesssama/animations/white_queen.mp4",
+    videos: [
+      {
+        title: "Original Motion (Live2D)",
+        src: "/assets/chesssama/animations/white_queen.mp4",
+        type: "idle",
+      },
+      {
+        title: "Spicy Idle Motion",
+        src: "/assets/chesssama/animations/white_queen_idle.mp4",
+        type: "idle",
+      },
+      {
+        title: "Spicy Combat Strike",
+        src: "/assets/chesssama/animations/white_queen_action.mp4",
+        type: "action",
+      },
+      {
+        title: "Spicy Climax / Victory",
+        src: "/assets/chesssama/animations/white_queen_special.mp4",
+        type: "special",
+      },
+    ],
   },
   {
     id: "white_king",
@@ -47,6 +91,14 @@ export const CHARACTERS_ROSTER: CharacterEntry[] = [
     actionImage: "/assets/chesssama/full/white_king_action.png",
     specialImage: "/assets/chesssama/full/white_king_special.png",
     iconImage: "/pieces/chesssama/white_king.png",
+    animationVideo: "/assets/chesssama/animations/white_king_idle.mp4",
+    videos: [
+      {
+        title: "Spicy Idle Motion",
+        src: "/assets/chesssama/animations/white_king_idle.mp4",
+        type: "idle",
+      },
+    ],
   },
   {
     id: "white_bishop",
@@ -63,6 +115,13 @@ export const CHARACTERS_ROSTER: CharacterEntry[] = [
     specialImage: "/assets/chesssama/full/white_bishop_special.png",
     iconImage: "/pieces/chesssama/white_bishop.png",
     animationVideo: "/assets/chesssama/animations/white_bishop.mp4",
+    videos: [
+      {
+        title: "Original Motion (Live2D)",
+        src: "/assets/chesssama/animations/white_bishop.mp4",
+        type: "idle",
+      },
+    ],
   },
   {
     id: "white_knight",
@@ -79,6 +138,13 @@ export const CHARACTERS_ROSTER: CharacterEntry[] = [
     specialImage: "/assets/chesssama/full/white_knight_special.png",
     iconImage: "/pieces/chesssama/white_knight.png",
     animationVideo: "/assets/chesssama/animations/white_knight.mp4",
+    videos: [
+      {
+        title: "Original Motion (Live2D)",
+        src: "/assets/chesssama/animations/white_knight.mp4",
+        type: "idle",
+      },
+    ],
   },
   {
     id: "white_rook",
@@ -95,6 +161,13 @@ export const CHARACTERS_ROSTER: CharacterEntry[] = [
     specialImage: "/assets/chesssama/full/white_rook_special.png",
     iconImage: "/pieces/chesssama/white_rook.png",
     animationVideo: "/assets/chesssama/animations/white_rook.mp4",
+    videos: [
+      {
+        title: "Original Motion (Live2D)",
+        src: "/assets/chesssama/animations/white_rook.mp4",
+        type: "idle",
+      },
+    ],
   },
   {
     id: "white_pawn",
@@ -128,6 +201,28 @@ export const CHARACTERS_ROSTER: CharacterEntry[] = [
     specialImage: "/assets/chesssama/full/black_queen_special.png",
     iconImage: "/pieces/chesssama/black_queen.png",
     animationVideo: "/assets/chesssama/animations/black_queen.mp4",
+    videos: [
+      {
+        title: "Original Motion (Live2D)",
+        src: "/assets/chesssama/animations/black_queen.mp4",
+        type: "idle",
+      },
+      {
+        title: "Spicy Idle Motion",
+        src: "/assets/chesssama/animations/black_queen_idle.mp4",
+        type: "idle",
+      },
+      {
+        title: "Spicy Combat Strike",
+        src: "/assets/chesssama/animations/black_queen_action.mp4",
+        type: "action",
+      },
+      {
+        title: "Spicy Climax / Victory",
+        src: "/assets/chesssama/animations/black_queen_special.mp4",
+        type: "special",
+      },
+    ],
   },
   {
     id: "black_king",
@@ -159,6 +254,13 @@ export const CHARACTERS_ROSTER: CharacterEntry[] = [
     specialImage: "/assets/chesssama/full/black_bishop_special.png",
     iconImage: "/pieces/chesssama/black_bishop.png",
     animationVideo: "/assets/chesssama/animations/black_bishop.mp4",
+    videos: [
+      {
+        title: "Original Motion (Live2D)",
+        src: "/assets/chesssama/animations/black_bishop.mp4",
+        type: "idle",
+      },
+    ],
   },
   {
     id: "black_knight",
@@ -175,6 +277,13 @@ export const CHARACTERS_ROSTER: CharacterEntry[] = [
     specialImage: "/assets/chesssama/full/black_knight_special.png",
     iconImage: "/pieces/chesssama/black_knight.png",
     animationVideo: "/assets/chesssama/animations/black_knight.mp4",
+    videos: [
+      {
+        title: "Original Motion (Live2D)",
+        src: "/assets/chesssama/animations/black_knight.mp4",
+        type: "idle",
+      },
+    ],
   },
   {
     id: "black_rook",
@@ -191,6 +300,13 @@ export const CHARACTERS_ROSTER: CharacterEntry[] = [
     specialImage: "/assets/chesssama/full/black_rook_special.png",
     iconImage: "/pieces/chesssama/black_rook.png",
     animationVideo: "/assets/chesssama/animations/black_rook.mp4",
+    videos: [
+      {
+        title: "Original Motion (Live2D)",
+        src: "/assets/chesssama/animations/black_rook.mp4",
+        type: "idle",
+      },
+    ],
   },
   {
     id: "black_pawn",

@@ -9,6 +9,8 @@ import {
   Card,
   SimpleGrid,
   SegmentedControl,
+  Tabs,
+  ActionIcon,
   Button,
   ScrollArea,
   Box,
@@ -19,11 +21,13 @@ import {
   IconSparkles,
   IconArrowsExchange,
   IconVolume,
+  IconChevronLeft,
+  IconChevronRight,
 } from "@tabler/icons-react";
 import { useAtom } from "jotai";
 import { galleryOpenAtom, galleryActiveTabAtom } from "@/state/atoms";
 import { IconVideo } from "@tabler/icons-react";
-import { CHARACTERS_ROSTER } from "./characterData";
+import { CHARACTERS_ROSTER, getCharacterVideos } from "./characterData";
 import { playAnimeSfx } from "@/utils/sound";
 import { generateAnimeMoveCommentary, type DialogueCategory } from "./animeDialogue";
 
@@ -34,6 +38,11 @@ export function GalleryModal() {
   const [compareMode, setCompareMode] = useState<boolean>(false);
   const [activeMediaTab, setActiveMediaTab] = useAtom(galleryActiveTabAtom);
   const [previewCategory, setPreviewCategory] = useState<DialogueCategory>("brilliant");
+  const [videoIndex, setVideoIndex] = useState<number>(0);
+
+  useEffect(() => {
+    setVideoIndex(0);
+  }, [selectedCharId]);
 
   // Global hotkey Ctrl+G listener
   useEffect(() => {
@@ -252,13 +261,17 @@ export function GalleryModal() {
               >
                 <Box w="100%">
                   {(() => {
-                    const tabs = [{ label: "Idle Art (9:16)", value: "idle" }];
-                    if (selectedChar.actionImage) tabs.push({ label: "Combat Action", value: "action" });
-                    if (selectedChar.specialImage) tabs.push({ label: "Special Climax", value: "special" });
-                    tabs.push({ label: "Piece Icon", value: "piece" });
-                    if (selectedChar.animationVideo) tabs.push({ label: "🎬 Live Motion (Video)", value: "video" });
+                    const charVideos = getCharacterVideos(selectedChar);
+                    const safeIndex = charVideos.length > 0 ? Math.min(videoIndex, charVideos.length - 1) : 0;
+                    const currentVideo = charVideos[safeIndex];
 
-                    const currentTab = tabs.some(t => t.value === activeMediaTab) ? activeMediaTab : "idle";
+                    const availableTabs = ["idle"];
+                    if (selectedChar.actionImage) availableTabs.push("action");
+                    if (selectedChar.specialImage) availableTabs.push("special");
+                    availableTabs.push("piece");
+                    if (charVideos.length > 0) availableTabs.push("video");
+
+                    const currentTab = availableTabs.includes(activeMediaTab) ? activeMediaTab : "idle";
                     const activeImage =
                       currentTab === "action"
                         ? selectedChar.actionImage
@@ -270,20 +283,74 @@ export function GalleryModal() {
 
                     return (
                       <>
-                        <SegmentedControl
+                        <Tabs
                           value={currentTab}
-                          onChange={setActiveMediaTab}
-                          data={tabs}
-                          fullWidth
-                          mb="md"
-                          size="xs"
+                          onChange={(val) => val && setActiveMediaTab(val)}
                           color="pink"
-                        />
-                        {currentTab === "video" && selectedChar.animationVideo ? (
-                          <Box style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+                          variant="pills"
+                          radius="md"
+                          mb="md"
+                        >
+                          <Tabs.List grow style={{ background: "#13131C", padding: 3, borderRadius: 8 }}>
+                            <Tabs.Tab value="idle" style={{ fontWeight: 700, fontSize: "11px" }}>
+                              Idle Art
+                            </Tabs.Tab>
+                            {selectedChar.actionImage && (
+                              <Tabs.Tab value="action" style={{ fontWeight: 700, fontSize: "11px" }}>
+                                Combat
+                              </Tabs.Tab>
+                            )}
+                            {selectedChar.specialImage && (
+                              <Tabs.Tab value="special" style={{ fontWeight: 700, fontSize: "11px" }}>
+                                Climax
+                              </Tabs.Tab>
+                            )}
+                            <Tabs.Tab value="piece" style={{ fontWeight: 700, fontSize: "11px" }}>
+                              Piece
+                            </Tabs.Tab>
+                            {charVideos.length > 0 && (
+                              <Tabs.Tab value="video" color="violet" style={{ fontWeight: 700, fontSize: "11px" }}>
+                                🎬 Video ({charVideos.length})
+                              </Tabs.Tab>
+                            )}
+                          </Tabs.List>
+                        </Tabs>
+
+                        {currentTab === "video" && currentVideo ? (
+                          <Box style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", gap: 8 }}>
+                            {/* Video Navigation Bar with small arrows */}
+                            <Group justify="space-between" align="center" w="100%" px="xs" mb={4}>
+                              <ActionIcon
+                                variant="light"
+                                color="violet"
+                                size="sm"
+                                disabled={charVideos.length <= 1}
+                                onClick={() => setVideoIndex((i) => (i - 1 + charVideos.length) % charVideos.length)}
+                              >
+                                <IconChevronLeft size="1rem" />
+                              </ActionIcon>
+                              <Group gap={6}>
+                                <Badge color="violet" variant="filled" size="xs">
+                                  {safeIndex + 1} / {charVideos.length}
+                                </Badge>
+                                <Text size="xs" fw={700} c="#FFF5FB">
+                                  {currentVideo.title}
+                                </Text>
+                              </Group>
+                              <ActionIcon
+                                variant="light"
+                                color="violet"
+                                size="sm"
+                                disabled={charVideos.length <= 1}
+                                onClick={() => setVideoIndex((i) => (i + 1) % charVideos.length)}
+                              >
+                                <IconChevronRight size="1rem" />
+                              </ActionIcon>
+                            </Group>
+
                             <video
-                              key={selectedChar.animationVideo}
-                              src={selectedChar.animationVideo}
+                              key={currentVideo.src}
+                              src={currentVideo.src}
                               autoPlay
                               loop
                               muted
@@ -291,7 +358,7 @@ export function GalleryModal() {
                               playsInline
                               style={{
                                 width: "100%",
-                                maxHeight: "470px",
+                                maxHeight: "440px",
                                 borderRadius: "12px",
                                 objectFit: "contain",
                                 background: "#0E0E14",
@@ -299,8 +366,8 @@ export function GalleryModal() {
                                 boxShadow: "0 0 20px rgba(139, 92, 246, 0.25)",
                               }}
                             />
-                            <Text size="xs" c="dimmed" fs="italic">
-                              Live2D 6-second motion loop animation for {selectedChar.name}
+                            <Text size="10px" c="dimmed" fs="italic">
+                              Use the arrows above to navigate all motion animations for {selectedChar.name}
                             </Text>
                           </Box>
                         ) : (

@@ -247,9 +247,9 @@ export default function NewTabHome({ id }: { id: string }) {
     },
     {
       icon: <IconSparkles size={60} color="#F4A6C6" />,
-      title: "Character Codex & Videos",
-      description: "12 Sovereigns, Live2D motion videos, art & audio",
-      label: "Open Codex & Videos (Ctrl+G)",
+      title: "Character Codex",
+      description: "12 Sovereigns of Dawn & Dusk, art & audio",
+      label: "Open Codex (Ctrl+G)",
       onClick: () => {
         setGalleryOpen(true);
       },
@@ -292,31 +292,18 @@ export default function NewTabHome({ id }: { id: string }) {
                 Experience high-precision Stockfish analysis accompanied by ecchi anime dialogue, dynamic combat cut-ins, and bespoke piece art.
               </Text>
             </Box>
-            <Group gap="xs">
-              <Button
-                color="pink"
-                variant="gradient"
-                gradient={{ from: "#EC4899", to: "#8B5CF6", deg: 90 }}
-                leftSection={<IconSparkles size={16} />}
-                onClick={() => {
-                  setActiveMediaTab("idle");
-                  setGalleryOpen(true);
-                }}
-              >
-                Explore Character Codex
-              </Button>
-              <Button
-                color="violet"
-                variant="light"
-                leftSection={<IconVideo size={16} />}
-                onClick={() => {
-                  setActiveMediaTab("video");
-                  setGalleryOpen(true);
-                }}
-              >
-                🎬 Watch Motion Videos
-              </Button>
-            </Group>
+            <Button
+              color="pink"
+              variant="gradient"
+              gradient={{ from: "#EC4899", to: "#8B5CF6", deg: 90 }}
+              leftSection={<IconSparkles size={16} />}
+              onClick={() => {
+                setActiveMediaTab("idle");
+                setGalleryOpen(true);
+              }}
+            >
+              Explore Character Codex
+            </Button>
           </Group>
         </Card>
 
