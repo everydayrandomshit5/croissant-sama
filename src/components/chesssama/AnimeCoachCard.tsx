@@ -19,6 +19,7 @@ import {
   IconCrown,
   IconSwords,
   IconPhoto,
+  IconVideo,
 } from "@tabler/icons-react";
 import { useAtom } from "jotai";
 import { useStore } from "zustand";
@@ -28,6 +29,7 @@ import {
   animeCoachCollapsedAtom,
   animeCoachEnabledAtom,
   animeCoachShowPortraitAtom,
+  animeCoachVideoModeAtom,
   galleryOpenAtom,
 } from "@/state/atoms";
 import {
@@ -43,6 +45,7 @@ export function AnimeCoachCard() {
   const [characterId, setCharacterId] = useAtom(animeCoachCharacterAtom);
   const [collapsed, setCollapsed] = useAtom(animeCoachCollapsedAtom);
   const [showPortrait, setShowPortrait] = useAtom(animeCoachShowPortraitAtom);
+  const [videoMode, setVideoMode] = useAtom(animeCoachVideoModeAtom);
   const [, setGalleryOpen] = useAtom(galleryOpenAtom);
   const [reRollCount, setReRollCount] = useState<number>(0);
 
@@ -325,6 +328,20 @@ export function AnimeCoachCard() {
             </ActionIcon>
           </Tooltip>
 
+          {/* Toggle Live Motion Video Animation */}
+          {activeChar.animationVideo && (
+            <Tooltip label={videoMode ? "Switch to Static Art Pose" : "Switch to Live Motion Animation (Video)"} position="top">
+              <ActionIcon
+                size="sm"
+                variant={videoMode ? "filled" : "subtle"}
+                color="violet"
+                onClick={() => setVideoMode((v) => !v)}
+              >
+                <IconVideo size="0.9rem" />
+              </ActionIcon>
+            </Tooltip>
+          )}
+
           {/* Open Gallery Drawer */}
           <Tooltip label="Open Art & Lore Gallery (Ctrl+G)" position="top">
             <ActionIcon
@@ -429,23 +446,40 @@ export function AnimeCoachCard() {
                   transition: "transform 0.2s ease, box-shadow 0.2s ease",
                 }}
               >
-                <img
-                  key={activeImageUrl}
-                  src={activeImageUrl}
-                  alt={commentary.speaker}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    objectPosition: "top center",
-                    transition: "opacity 0.2s ease",
-                  }}
-                />
-                {/* Pose pill at bottom of art */}
+                {videoMode && activeChar.animationVideo ? (
+                  <video
+                    key={activeChar.animationVideo}
+                    src={activeChar.animationVideo}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      objectPosition: "top center",
+                    }}
+                  />
+                ) : (
+                  <img
+                    key={activeImageUrl}
+                    src={activeImageUrl}
+                    alt={commentary.speaker}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      objectPosition: "top center",
+                      transition: "opacity 0.2s ease",
+                    }}
+                  />
+                )}
+                {/* Pose / Video pill at bottom of art */}
                 <Badge
                   size="compact-xs"
                   variant="filled"
-                  color={poseBadge.color}
+                  color={videoMode && activeChar.animationVideo ? "violet" : poseBadge.color}
                   style={{
                     position: "absolute",
                     bottom: 2,
@@ -458,7 +492,7 @@ export function AnimeCoachCard() {
                     opacity: 0.92,
                   }}
                 >
-                  {currentPose}
+                  {videoMode && activeChar.animationVideo ? "LIVE 🎬" : currentPose}
                 </Badge>
               </Box>
             </Tooltip>

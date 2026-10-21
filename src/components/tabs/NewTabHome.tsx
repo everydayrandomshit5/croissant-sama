@@ -24,8 +24,8 @@ import {
 } from "@/state/atoms";
 import type { Tab } from "@/utils/tabs";
 import { createTab } from "@/utils/tabs";
-import { galleryOpenAtom } from "@/state/atoms";
-import { IconSparkles } from "@tabler/icons-react";
+import { galleryOpenAtom, galleryActiveTabAtom } from "@/state/atoms";
+import { IconSparkles, IconVideo } from "@tabler/icons-react";
 import { unwrap } from "@/utils/unwrap";
 import CreateRepertoireModal from "./CreateRepertoireModal";
 import ImportModal from "./ImportModal";
@@ -112,6 +112,7 @@ export default function NewTabHome({ id }: { id: string }) {
   const [openModal, setOpenModal] = useState(false);
   const [openRepertoireModal, setOpenRepertoireModal] = useState(false);
   const setGalleryOpen = useSetAtom(galleryOpenAtom);
+  const setActiveMediaTab = useSetAtom(galleryActiveTabAtom);
   const [, setTabs] = useAtom(tabsAtom);
   const setActiveTab = useSetAtom(activeTabAtom);
 
@@ -246,9 +247,9 @@ export default function NewTabHome({ id }: { id: string }) {
     },
     {
       icon: <IconSparkles size={60} color="#F4A6C6" />,
-      title: "Character Codex",
-      description: "12 Sovereigns of Dawn & Dusk, art & audio",
-      label: "Open Codex (Ctrl+G)",
+      title: "Character Codex & Videos",
+      description: "12 Sovereigns, Live2D motion videos, art & audio",
+      label: "Open Codex & Videos (Ctrl+G)",
       onClick: () => {
         setGalleryOpen(true);
       },
@@ -291,15 +292,31 @@ export default function NewTabHome({ id }: { id: string }) {
                 Experience high-precision Stockfish analysis accompanied by ecchi anime dialogue, dynamic combat cut-ins, and bespoke piece art.
               </Text>
             </Box>
-            <Button
-              color="pink"
-              variant="gradient"
-              gradient={{ from: "#EC4899", to: "#8B5CF6", deg: 90 }}
-              leftSection={<IconSparkles size={16} />}
-              onClick={() => setGalleryOpen(true)}
-            >
-              Explore Character Codex
-            </Button>
+            <Group gap="xs">
+              <Button
+                color="pink"
+                variant="gradient"
+                gradient={{ from: "#EC4899", to: "#8B5CF6", deg: 90 }}
+                leftSection={<IconSparkles size={16} />}
+                onClick={() => {
+                  setActiveMediaTab("idle");
+                  setGalleryOpen(true);
+                }}
+              >
+                Explore Character Codex
+              </Button>
+              <Button
+                color="violet"
+                variant="light"
+                leftSection={<IconVideo size={16} />}
+                onClick={() => {
+                  setActiveMediaTab("video");
+                  setGalleryOpen(true);
+                }}
+              >
+                🎬 Watch Motion Videos
+              </Button>
+            </Group>
           </Group>
         </Card>
 

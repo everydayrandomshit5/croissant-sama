@@ -21,7 +21,8 @@ import {
   IconVolume,
 } from "@tabler/icons-react";
 import { useAtom } from "jotai";
-import { galleryOpenAtom } from "@/state/atoms";
+import { galleryOpenAtom, galleryActiveTabAtom } from "@/state/atoms";
+import { IconVideo } from "@tabler/icons-react";
 import { CHARACTERS_ROSTER } from "./characterData";
 import { playAnimeSfx } from "@/utils/sound";
 import { generateAnimeMoveCommentary, type DialogueCategory } from "./animeDialogue";
@@ -31,7 +32,7 @@ export function GalleryModal() {
   const [filterSide, setFilterSide] = useState<string>("all");
   const [selectedCharId, setSelectedCharId] = useState<string>("white_queen");
   const [compareMode, setCompareMode] = useState<boolean>(false);
-  const [activeMediaTab, setActiveMediaTab] = useState<string>("idle");
+  const [activeMediaTab, setActiveMediaTab] = useAtom(galleryActiveTabAtom);
   const [previewCategory, setPreviewCategory] = useState<DialogueCategory>("brilliant");
 
   // Global hotkey Ctrl+G listener
@@ -184,9 +185,16 @@ export function GalleryModal() {
                         style={{ filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.6))" }}
                       />
                     </Box>
-                    <Text size="xs" fw={700} truncate c={isWhite ? "#FFF8F6" : "#D4AF37"}>
-                      {char.name}
-                    </Text>
+                    <Group justify="space-between" align="center" wrap="nowrap" mb={2}>
+                      <Text size="xs" fw={700} truncate c={isWhite ? "#FFF8F6" : "#D4AF37"}>
+                        {char.name}
+                      </Text>
+                      {char.animationVideo && (
+                        <Badge size="compact-xs" color="violet" variant="filled" style={{ fontSize: "9px" }}>
+                          🎬 Video
+                        </Badge>
+                      )}
+                    </Group>
                     <Text size="10px" c="dimmed" tt="uppercase">
                       {char.pieceType} • {char.side}
                     </Text>
@@ -248,7 +256,7 @@ export function GalleryModal() {
                     if (selectedChar.actionImage) tabs.push({ label: "Combat Action", value: "action" });
                     if (selectedChar.specialImage) tabs.push({ label: "Special Climax", value: "special" });
                     tabs.push({ label: "Piece Icon", value: "piece" });
-                    if (selectedChar.animationVideo) tabs.push({ label: "Loop (6s)", value: "video" });
+                    if (selectedChar.animationVideo) tabs.push({ label: "🎬 Live Motion (Video)", value: "video" });
 
                     const currentTab = tabs.some(t => t.value === activeMediaTab) ? activeMediaTab : "idle";
                     const activeImage =
@@ -272,22 +280,29 @@ export function GalleryModal() {
                           color="pink"
                         />
                         {currentTab === "video" && selectedChar.animationVideo ? (
-                          <video
-                            key={selectedChar.animationVideo}
-                            src={selectedChar.animationVideo}
-                            autoPlay
-                            loop
-                            muted
-                            controls
-                            playsInline
-                            style={{
-                              width: "100%",
-                              maxHeight: "480px",
-                              borderRadius: "12px",
-                              objectFit: "contain",
-                              background: "#0E0E14",
-                            }}
-                          />
+                          <Box style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+                            <video
+                              key={selectedChar.animationVideo}
+                              src={selectedChar.animationVideo}
+                              autoPlay
+                              loop
+                              muted
+                              controls
+                              playsInline
+                              style={{
+                                width: "100%",
+                                maxHeight: "470px",
+                                borderRadius: "12px",
+                                objectFit: "contain",
+                                background: "#0E0E14",
+                                border: "1.5px solid rgba(139, 92, 246, 0.4)",
+                                boxShadow: "0 0 20px rgba(139, 92, 246, 0.25)",
+                              }}
+                            />
+                            <Text size="xs" c="dimmed" fs="italic">
+                              Live2D 6-second motion loop animation for {selectedChar.name}
+                            </Text>
+                          </Box>
                         ) : (
                           <Box
                             style={{
